@@ -1,10 +1,19 @@
 import Quickshell
+import Quickshell.Io
 import "modules/bar"
+import "modules/clipboard"
 import "modules/launcher"
 import "modules/notifications"
+import "theme"
 
 ShellRoot {
+    // Always-on palette watcher — hot-reloads Theme colors when palette.json changes
+    PaletteLoader {}
+
     Bar {
+    }
+
+    ClipboardPanel {
     }
 
     Launcher {

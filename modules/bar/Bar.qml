@@ -3,11 +3,31 @@ import "../controlpanel"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Wayland
 
 PanelWindow {
     id: barRoot
 
+    screen: {
+        const mon = Hyprland.focusedMonitor;
+        if (mon) {
+            for (let i = 0; i < Quickshell.screens.length; i++) {
+                if (Quickshell.screens[i].name === mon.name)
+                    return Quickshell.screens[i];
+
+            }
+        }
+        if (Hyprland.focusedWorkspace && Hyprland.focusedWorkspace.monitor) {
+            const wsMonName = Hyprland.focusedWorkspace.monitor.name;
+            for (let j = 0; j < Quickshell.screens.length; j++) {
+                if (Quickshell.screens[j].name === wsMonName)
+                    return Quickshell.screens[j];
+
+            }
+        }
+        return Quickshell.screens.length > 0 ? Quickshell.screens[0] : null;
+    }
     anchors.top: true
     anchors.left: true
     anchors.right: true
@@ -39,6 +59,9 @@ PanelWindow {
                 Layout.alignment: Qt.AlignVCenter
 
                 LauncherButton {
+                }
+
+                ClipboardButton {
                 }
 
                 Workspaces {

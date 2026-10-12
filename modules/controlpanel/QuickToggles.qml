@@ -15,6 +15,9 @@ GridLayout {
     property bool caffeineEnabled: false
 
     signal requestClose()
+    signal openWallpapers()
+    signal openWifi()
+    signal openBluetooth()
 
     function refreshNetwork() {
         netProc.exec(["sh", "-c", "echo WIFI:$(nmcli -t -f WIFI g 2>/dev/null); echo SSID:$(nmcli -t -f active,ssid dev wifi 2>/dev/null | grep '^yes:' | cut -d: -f2)"]);
@@ -114,53 +117,85 @@ GridLayout {
 
         RowLayout {
             anchors.fill: parent
-            anchors.leftMargin: 12
-            anchors.rightMargin: 10
-            spacing: 10
+            anchors.leftMargin: 10
+            anchors.rightMargin: 6
+            spacing: 8
 
-            Text {
-                text: root.wifiEnabled ? "󰤨" : "󰤮"
-                font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
-                font.pixelSize: Theme.fontXl
-                color: root.wifiEnabled ? Theme.mantle : Theme.text
-            }
-
-            ColumnLayout {
+            // Clickable toggle area (icon + text)
+            Item {
                 Layout.fillWidth: true
-                spacing: 1
+                Layout.fillHeight: true
 
-                Text {
-                    text: "Wi-Fi"
-                    font.family: "sans-serif"
-                    font.pixelSize: Theme.fontMd
-                    font.bold: true
-                    color: root.wifiEnabled ? Theme.mantle : Theme.text
+                RowLayout {
+                    anchors.fill: parent
+                    spacing: 8
+
+                    Text {
+                        text: root.wifiEnabled ? "󰤨" : "󰤮"
+                        font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                        font.pixelSize: Theme.fontXl
+                        color: root.wifiEnabled ? Theme.mantle : Theme.text
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 1
+
+                        Text {
+                            text: "Wi-Fi"
+                            font.family: "sans-serif"
+                            font.pixelSize: Theme.fontMd
+                            font.bold: true
+                            color: root.wifiEnabled ? Theme.mantle : Theme.text
+                        }
+
+                        Text {
+                            text: root.wifiSsid
+                            font.family: "sans-serif"
+                            font.pixelSize: Theme.fontSm
+                            color: root.wifiEnabled ? "#313244" : Theme.subtext0
+                            elide: Text.ElideRight
+                            Layout.fillWidth: true
+                        }
+                    }
                 }
 
-                Text {
-                    text: root.wifiSsid
-                    font.family: "sans-serif"
-                    font.pixelSize: Theme.fontSm
-                    color: root.wifiEnabled ? "#313244" : Theme.subtext0
-                    elide: Text.ElideRight
-                    Layout.fillWidth: true
+                MouseArea {
+                    id: wifiMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        var target = root.wifiEnabled ? "off" : "on";
+                        execProc.exec(["nmcli", "radio", "wifi", target]);
+                        root.wifiEnabled = !root.wifiEnabled;
+                        root.refreshNetwork();
+                    }
                 }
-
             }
 
-        }
+            // Drill-down button to network list
+            Rectangle {
+                implicitWidth: 26
+                implicitHeight: 26
+                radius: Theme.radiusSm
+                color: wifiDrillMouse.containsMouse ? (root.wifiEnabled ? "#33000000" : Theme.surface1) : "transparent"
 
-        MouseArea {
-            id: wifiMouse
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰅂"
+                    font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                    font.pixelSize: Theme.fontMd
+                    color: root.wifiEnabled ? Theme.mantle : Theme.subtext0
+                }
 
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                var target = root.wifiEnabled ? "off" : "on";
-                execProc.exec(["nmcli", "radio", "wifi", target]);
-                root.wifiEnabled = !root.wifiEnabled;
-                root.refreshNetwork();
+                MouseArea {
+                    id: wifiDrillMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.openWifi()
+                }
             }
         }
 
@@ -168,9 +203,7 @@ GridLayout {
             ColorAnimation {
                 duration: 150
             }
-
         }
-
     }
 
     // Toggle 2: Bluetooth
@@ -182,53 +215,85 @@ GridLayout {
 
         RowLayout {
             anchors.fill: parent
-            anchors.leftMargin: 12
-            anchors.rightMargin: 10
-            spacing: 10
+            anchors.leftMargin: 10
+            anchors.rightMargin: 6
+            spacing: 8
 
-            Text {
-                text: root.btEnabled ? "󰂯" : "󰂲"
-                font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
-                font.pixelSize: Theme.fontXl
-                color: root.btEnabled ? Theme.mantle : Theme.text
-            }
-
-            ColumnLayout {
+            // Clickable toggle area (icon + text)
+            Item {
                 Layout.fillWidth: true
-                spacing: 1
+                Layout.fillHeight: true
 
-                Text {
-                    text: "Bluetooth"
-                    font.family: "sans-serif"
-                    font.pixelSize: Theme.fontMd
-                    font.bold: true
-                    color: root.btEnabled ? Theme.mantle : Theme.text
+                RowLayout {
+                    anchors.fill: parent
+                    spacing: 8
+
+                    Text {
+                        text: root.btEnabled ? "󰂯" : "󰂲"
+                        font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                        font.pixelSize: Theme.fontXl
+                        color: root.btEnabled ? Theme.mantle : Theme.text
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 1
+
+                        Text {
+                            text: "Bluetooth"
+                            font.family: "sans-serif"
+                            font.pixelSize: Theme.fontMd
+                            font.bold: true
+                            color: root.btEnabled ? Theme.mantle : Theme.text
+                        }
+
+                        Text {
+                            text: root.btDevice
+                            font.family: "sans-serif"
+                            font.pixelSize: Theme.fontSm
+                            color: root.btEnabled ? "#313244" : Theme.subtext0
+                            elide: Text.ElideRight
+                            Layout.fillWidth: true
+                        }
+                    }
                 }
 
-                Text {
-                    text: root.btDevice
-                    font.family: "sans-serif"
-                    font.pixelSize: Theme.fontSm
-                    color: root.btEnabled ? "#313244" : Theme.subtext0
-                    elide: Text.ElideRight
-                    Layout.fillWidth: true
+                MouseArea {
+                    id: btMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        var target = root.btEnabled ? "off" : "on";
+                        execProc.exec(["bluetoothctl", "power", target]);
+                        root.btEnabled = !root.btEnabled;
+                        root.refreshBluetooth();
+                    }
                 }
-
             }
 
-        }
+            // Drill-down button to device list
+            Rectangle {
+                implicitWidth: 26
+                implicitHeight: 26
+                radius: Theme.radiusSm
+                color: btDrillMouse.containsMouse ? (root.btEnabled ? "#33000000" : Theme.surface1) : "transparent"
 
-        MouseArea {
-            id: btMouse
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰅂"
+                    font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                    font.pixelSize: Theme.fontMd
+                    color: root.btEnabled ? Theme.mantle : Theme.subtext0
+                }
 
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: {
-                var target = root.btEnabled ? "off" : "on";
-                execProc.exec(["bluetoothctl", "power", target]);
-                root.btEnabled = !root.btEnabled;
-                root.refreshBluetooth();
+                MouseArea {
+                    id: btDrillMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.openBluetooth()
+                }
             }
         }
 
@@ -236,9 +301,7 @@ GridLayout {
             ColorAnimation {
                 duration: 150
             }
-
         }
-
     }
 
     // Toggle 3: Night Light
@@ -497,6 +560,79 @@ GridLayout {
                     controlPanel.visible = false;
 
                 screenshotTimer.start();
+            }
+        }
+
+        Behavior on color {
+            ColorAnimation {
+                duration: 150
+            }
+
+        }
+
+    }
+
+    // Toggle 7: Wallpaper Selector
+    Rectangle {
+        Layout.fillWidth: true
+        Layout.columnSpan: 2
+        implicitHeight: 46
+        radius: Theme.radiusSm
+        color: wpMouse.containsMouse ? Theme.surface1 : Theme.surface0
+
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 12
+            anchors.rightMargin: 12
+            spacing: 10
+
+            Text {
+                text: "󰸉"
+                font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                font.pixelSize: Theme.fontXl
+                color: Theme.mauve
+            }
+
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 1
+
+                Text {
+                    text: "Wallpaper"
+                    font.family: "sans-serif"
+                    font.pixelSize: Theme.fontMd
+                    font.bold: true
+                    color: Theme.text
+                }
+
+                Text {
+                    text: "Select desktop background"
+                    font.family: "sans-serif"
+                    font.pixelSize: Theme.fontSm
+                    color: Theme.subtext0
+                    elide: Text.ElideRight
+                    Layout.fillWidth: true
+                }
+
+            }
+
+            Text {
+                text: "󰅂"
+                font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                font.pixelSize: Theme.fontMd
+                color: Theme.subtext0
+            }
+
+        }
+
+        MouseArea {
+            id: wpMouse
+
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                root.openWallpapers();
             }
         }
 

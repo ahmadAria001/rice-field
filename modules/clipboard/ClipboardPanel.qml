@@ -1,0 +1,640 @@
+import "../../theme"
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Io
+import Quickshell.Wayland
+
+PanelWindow {
+    id: root
+
+    property var clips: []
+
+    function addClip(text) {
+        if (!text || typeof text !== "string")
+            return ;
+
+        const trimmed = text.trim();
+        if (trimmed === "")
+            return ;
+
+        const list = root.clips.slice();
+        const existingIdx = list.indexOf(text);
+        if (existingIdx !== -1)
+            list.splice(existingIdx, 1);
+
+        list.unshift(text);
+        if (list.length > 50)
+            list.splice(50);
+
+        root.clips = list;
+        saveClips();
+    }
+
+    function deleteClip(targetText) {
+        const list = root.clips.slice();
+        const idx = list.indexOf(targetText);
+        if (idx !== -1) {
+            list.splice(idx, 1);
+            root.clips = list;
+            saveClips();
+        }
+    }
+
+    function clearAll() {
+        root.clips = [];
+        saveClips();
+    }
+
+    function selectClip(text) {
+        if (!text)
+            return ;
+
+        copyProc.exec(["wl-copy", text]);
+        Quickshell.clipboardText = text;
+        addClip(text);
+        root.visible = false;
+    }
+
+    function loadClips() {
+        try {
+            const content = historyFile.text();
+            if (content && content.trim() !== "") {
+                const parsed = JSON.parse(content);
+                if (Array.isArray(parsed))
+                    root.clips = parsed;
+
+            }
+        } catch (e) {
+            console.warn("Failed to load clipboard history:", e);
+        }
+    }
+
+    function saveClips() {
+        try {
+            historyFile.setText(JSON.stringify(root.clips, null, 2));
+        } catch (e) {
+            console.warn("Failed to save clipboard history:", e);
+        }
+    }
+
+    anchors.top: true
+    anchors.bottom: true
+    anchors.left: true
+    anchors.right: true
+    color: "transparent"
+    visible: false
+    WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.keyboardFocus: root.visible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+    Component.onCompleted: {
+        loadClips();
+    }
+
+    // IPC handler for toggling / opening
+    IpcHandler {
+        function toggle() {
+            root.visible = !root.visible;
+            if (root.visible) {
+                searchField.text = "";
+                searchField.forceActiveFocus();
+                clipList.currentIndex = 0;
+            }
+        }
+
+        function open() {
+            root.visible = true;
+            searchField.text = "";
+            searchField.forceActiveFocus();
+            clipList.currentIndex = 0;
+        }
+
+        function close() {
+            root.visible = false;
+        }
+
+        target: "clipboard"
+    }
+
+    // Dismiss with Escape
+    Shortcut {
+        sequence: "Escape"
+        enabled: root.visible
+        onActivated: root.visible = false
+    }
+
+    // File persistence
+    FileView {
+        id: historyFile
+
+        path: Quickshell.shellDir + "/clipboard_history.json"
+        blockLoading: true
+    }
+
+    // Process for copying
+    Process {
+        id: copyProc
+    }
+
+    // Background watcher using wl-paste --watch
+    Process {
+        id: clipWatcher
+
+        command: [Quickshell.shellDir + "/scripts/clip_watch.sh"]
+        running: true
+        onRunningChanged: {
+            if (!running)
+                running = true;
+
+        }
+
+        stdout: SplitParser {
+            onRead: (data) => {
+                if (!data || data.trim() === "")
+                    return ;
+
+                try {
+                    const str = JSON.parse(data.trim());
+                    if (typeof str === "string" && str.trim() !== "")
+                        root.addClip(str);
+
+                } catch (e) {
+                }
+            }
+        }
+
+    }
+
+    // Listener for Quickshell native clipboard property changes
+    Connections {
+        function onClipboardTextChanged() {
+            if (Quickshell.clipboardText && Quickshell.clipboardText.trim() !== "")
+                root.addClip(Quickshell.clipboardText);
+
+        }
+
+        target: Quickshell
+    }
+
+    // Backdrop dismissal
+    MouseArea {
+        anchors.fill: parent
+        onClicked: root.visible = false
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#80000000"
+        }
+
+    }
+
+    // Center Modal Card
+    Rectangle {
+        id: card
+
+        width: 560
+        height: 500
+        anchors.centerIn: parent
+        color: Theme.base
+        radius: Theme.radiusLg
+        border.color: Theme.surface0
+        border.width: Theme.borderWidth
+
+        // Absorb clicks so backdrop doesn't close when clicking inside card
+        MouseArea {
+            anchors.fill: parent
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 16
+            spacing: 12
+
+            // Header Row
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 10
+
+                // Icon
+                Text {
+                    text: "󰅌"
+                    font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                    font.pixelSize: Theme.fontXl
+                    color: Theme.mauve
+                }
+
+                // Title
+                Text {
+                    text: "Clipboard History"
+                    font.family: "sans-serif"
+                    font.pixelSize: Theme.fontLg
+                    font.bold: true
+                    color: Theme.text
+                }
+
+                // Item count pill
+                Rectangle {
+                    implicitWidth: countText.implicitWidth + 12
+                    implicitHeight: 22
+                    radius: Theme.radiusSm
+                    color: Theme.surface0
+
+                    Text {
+                        id: countText
+
+                        anchors.centerIn: parent
+                        text: root.clips.length + " items"
+                        font.pixelSize: Theme.fontSm
+                        color: Theme.subtext0
+                    }
+
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                // Clear All Button
+                Rectangle {
+                    visible: root.clips.length > 0
+                    implicitWidth: clearRow.implicitWidth + 14
+                    implicitHeight: 26
+                    radius: Theme.radiusSm
+                    color: clearMouse.containsMouse ? Theme.surface1 : Theme.surface0
+                    border.color: clearMouse.containsMouse ? Theme.red : "transparent"
+                    border.width: Theme.borderWidth
+
+                    RowLayout {
+                        id: clearRow
+
+                        anchors.centerIn: parent
+                        spacing: 6
+
+                        Text {
+                            text: "󰆴"
+                            font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                            font.pixelSize: Theme.fontSm
+                            color: clearMouse.containsMouse ? Theme.red : Theme.subtext0
+                        }
+
+                        Text {
+                            text: "Clear All"
+                            font.family: "sans-serif"
+                            font.pixelSize: Theme.fontSm
+                            color: clearMouse.containsMouse ? Theme.red : Theme.subtext0
+                        }
+
+                    }
+
+                    MouseArea {
+                        id: clearMouse
+
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.clearAll()
+                    }
+
+                }
+
+                // Close Button
+                Rectangle {
+                    implicitWidth: 26
+                    implicitHeight: 26
+                    radius: Theme.radiusSm
+                    color: closeMouse.containsMouse ? Theme.surface1 : "transparent"
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: "󰅖"
+                        font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                        font.pixelSize: Theme.fontMd
+                        color: closeMouse.containsMouse ? Theme.text : Theme.subtext0
+                    }
+
+                    MouseArea {
+                        id: closeMouse
+
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: root.visible = false
+                    }
+
+                }
+
+            }
+
+            // Search Bar
+            TextField {
+                id: searchField
+
+                Layout.fillWidth: true
+                placeholderText: "Type to filter clips..."
+                placeholderTextColor: Theme.subtext0
+                font.pixelSize: Theme.fontMd
+                color: Theme.text
+                focus: true
+                leftPadding: 34
+                rightPadding: 32
+                Keys.onPressed: (event) => {
+                    if (event.key === Qt.Key_Escape) {
+                        root.visible = false;
+                        event.accepted = true;
+                    } else if (event.key === Qt.Key_Down) {
+                        clipList.incrementCurrentIndex();
+                        event.accepted = true;
+                    } else if (event.key === Qt.Key_Up) {
+                        clipList.decrementCurrentIndex();
+                        event.accepted = true;
+                    } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                        if (clipList.currentItem && clipList.currentItem.clipText)
+                            root.selectClip(clipList.currentItem.clipText);
+
+                        event.accepted = true;
+                    }
+                }
+
+                background: Rectangle {
+                    color: Theme.surface0
+                    radius: Theme.radiusSm
+                    border.color: searchField.activeFocus ? Theme.mauve : Theme.surface1
+                    border.width: Theme.borderWidth
+
+                    // Search icon inside textfield
+                    Text {
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "󰍉"
+                        font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                        font.pixelSize: Theme.fontMd
+                        color: Theme.subtext0
+                    }
+
+                    // Clear search input button
+                    Text {
+                        visible: searchField.text !== ""
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "󰅖"
+                        font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                        font.pixelSize: Theme.fontSm
+                        color: clearSearchMouse.containsMouse ? Theme.text : Theme.subtext0
+
+                        MouseArea {
+                            id: clearSearchMouse
+
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                searchField.text = "";
+                                searchField.forceActiveFocus();
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+
+            // Empty State View
+            Item {
+                visible: clipList.count === 0
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                ColumnLayout {
+                    anchors.centerIn: parent
+                    spacing: 8
+
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: "󰅌"
+                        font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                        font.pixelSize: 36
+                        color: Theme.surface1
+                    }
+
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: searchField.text === "" ? "Clipboard is empty" : "No matching clips found"
+                        font.family: "sans-serif"
+                        font.pixelSize: Theme.fontMd
+                        font.bold: true
+                        color: Theme.subtext0
+                    }
+
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: searchField.text === "" ? "Copied items will appear here automatically" : "Try searching with different keywords"
+                        font.family: "sans-serif"
+                        font.pixelSize: Theme.fontSm
+                        color: Theme.surface1
+                    }
+
+                }
+
+            }
+
+            // Clipboard History List
+            ListView {
+                id: clipList
+
+                visible: count > 0
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+                spacing: 6
+                boundsBehavior: Flickable.StopAtBounds
+
+                model: ScriptModel {
+                    id: clipModel
+
+                    values: {
+                        const q = searchField.text.toLowerCase().trim();
+                        if (q === "")
+                            return root.clips;
+
+                        return root.clips.filter((item) => {
+                            return item.toLowerCase().includes(q);
+                        });
+                    }
+                }
+
+                delegate: Rectangle {
+                    id: itemCard
+
+                    required property var modelData
+                    required property int index
+                    property string clipText: modelData
+                    property bool isSelected: index === clipList.currentIndex
+
+                    width: ListView.view.width
+                    implicitHeight: Math.max(52, previewColumn.implicitHeight + 16)
+                    radius: Theme.radiusSm
+                    color: itemMouse.containsMouse ? Theme.surface0 : Theme.mantle
+                    border.color: itemCard.isSelected ? Theme.mauve : (itemMouse.containsMouse ? Theme.surface1 : Theme.surface0)
+                    border.width: Theme.borderWidth
+
+                    // Main card click: selects clip and closes panel for immediate pasting
+                    MouseArea {
+                        id: itemMouse
+
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        acceptedButtons: Qt.LeftButton
+                        onClicked: (mouse) => {
+                            clipList.currentIndex = itemCard.index;
+                            root.selectClip(itemCard.clipText);
+                        }
+                    }
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        spacing: 12
+                        z: 1
+
+                        // Index badge
+                        Rectangle {
+                            implicitWidth: 26
+                            implicitHeight: 26
+                            radius: Theme.radiusSm
+                            color: itemCard.isSelected ? Theme.mauve : Theme.surface0
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: "#" + (itemCard.index + 1)
+                                font.family: "sans-serif"
+                                font.pixelSize: Theme.fontSm
+                                font.bold: true
+                                color: itemCard.isSelected ? Theme.mantle : Theme.subtext0
+                            }
+
+                        }
+
+                        // Text Preview Column
+                        ColumnLayout {
+                            id: previewColumn
+
+                            Layout.fillWidth: true
+                            spacing: 4
+
+                            Text {
+                                Layout.fillWidth: true
+                                text: itemCard.clipText.replace(/\r\n/g, "\n").replace(/\n/g, " ↵ ")
+                                font.family: "MesloLGS Nerd Font, monospace, sans-serif"
+                                font.pixelSize: Theme.fontSm
+                                color: Theme.text
+                                elide: Text.ElideRight
+                                maximumLineCount: 2
+                                wrapMode: Text.WrapAnywhere
+                            }
+
+                            // Meta info (character / line count)
+                            Text {
+                                text: {
+                                    const len = itemCard.clipText.length;
+                                    const lines = itemCard.clipText.split("\n").length;
+                                    return len + " chars" + (lines > 1 ? " • " + lines + " lines" : "");
+                                }
+                                font.family: "sans-serif"
+                                font.pixelSize: Theme.fontSm - 1
+                                color: Theme.subtext0
+                            }
+
+                        }
+
+                        // Action Buttons: Copy / Select indicator and Delete button
+                        RowLayout {
+                            spacing: 6
+                            z: 2
+
+                            // Delete button
+                            Rectangle {
+                                implicitWidth: 28
+                                implicitHeight: 28
+                                radius: Theme.radiusSm
+                                color: delMouse.containsMouse ? Theme.surface1 : "transparent"
+                                border.color: delMouse.containsMouse ? Theme.red : "transparent"
+                                border.width: Theme.borderWidth
+                                ToolTip.visible: delMouse.containsMouse
+                                ToolTip.text: "Delete clip"
+                                ToolTip.delay: 300
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "󰆴"
+                                    font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                                    font.pixelSize: Theme.fontMd
+                                    color: delMouse.containsMouse ? Theme.red : Theme.subtext0
+                                }
+
+                                MouseArea {
+                                    id: delMouse
+
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    preventStealing: true
+                                    propagateComposedEvents: false
+                                    onClicked: (mouse) => {
+                                        mouse.accepted = true;
+                                        root.deleteClip(itemCard.clipText);
+                                    }
+                                }
+
+                            }
+
+                            // Select / Ready to Paste indicator
+                            Rectangle {
+                                implicitWidth: 28
+                                implicitHeight: 28
+                                radius: Theme.radiusSm
+                                color: itemMouse.containsMouse ? Theme.mauve : "transparent"
+                                ToolTip.visible: itemMouse.containsMouse && !delMouse.containsMouse
+                                ToolTip.text: "Click to select & copy for paste"
+                                ToolTip.delay: 300
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: "󰆏"
+                                    font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                                    font.pixelSize: Theme.fontMd
+                                    color: itemMouse.containsMouse ? Theme.mantle : Theme.subtext0
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    Behavior on color {
+                        ColorAnimation {
+                            duration: 120
+                        }
+
+                    }
+
+                    Behavior on border.color {
+                        ColorAnimation {
+                            duration: 120
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+}

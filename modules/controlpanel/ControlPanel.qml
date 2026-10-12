@@ -76,22 +76,34 @@ PopupWindow {
 
             // Header Row (Dynamic based on currentView)
             RowLayout {
-                // Text {
-                //     text: {
-                //         if (controlPanel.currentView === "audio")
-                //             return "Audio & Mixer";
-                //         if (controlPanel.currentView === "brightness")
-                //             return "Display Brightness";
-                //         return "Quick Settings";
-                //     }
-                //     font.family: "sans-serif"
-                //     font.pixelSize: Theme.fontMd
-                //     font.bold: true
-                //     color: Theme.text
-                // }
-
                 Layout.fillWidth: true
                 spacing: 8
+
+                Text {
+                    visible: controlPanel.currentView !== "main"
+                    text: {
+                        if (controlPanel.currentView === "audio")
+                            return "Audio & Mixer";
+
+                        if (controlPanel.currentView === "brightness")
+                            return "Display Brightness";
+
+                        if (controlPanel.currentView === "wallpapers")
+                            return "Wallpapers";
+
+                        if (controlPanel.currentView === "wifi")
+                            return "Wi-Fi Networks";
+
+                        if (controlPanel.currentView === "bluetooth")
+                            return "Bluetooth Devices";
+
+                        return "";
+                    }
+                    font.family: "JetBrainsMono Nerd Font, sans-serif"
+                    font.pixelSize: Theme.fontMd
+                    font.bold: true
+                    color: Theme.text
+                }
 
                 // Back Button (shown only on subpages)
                 Rectangle {
@@ -197,10 +209,19 @@ PopupWindow {
                     }
                 }
 
-                // Quick Toggles (Wi-Fi, Bluetooth, Night Light, Caffeine, DND, Screenshot)
+                // Quick Toggles (Wi-Fi, Bluetooth, Night Light, Caffeine, DND, Screenshot, Wallpaper)
                 QuickToggles {
                     onRequestClose: {
                         controlPanel.visible = false;
+                    }
+                    onOpenWallpapers: {
+                        controlPanel.currentView = "wallpapers";
+                    }
+                    onOpenWifi: {
+                        controlPanel.currentView = "wifi";
+                    }
+                    onOpenBluetooth: {
+                        controlPanel.currentView = "bluetooth";
                     }
                 }
 
@@ -222,6 +243,21 @@ PopupWindow {
             // View 3: Multi-Monitor Brightness
             BrightnessSection {
                 visible: controlPanel.currentView === "brightness"
+            }
+
+            // View 4: Wallpaper Selector
+            WallpaperSection {
+                visible: controlPanel.currentView === "wallpapers"
+            }
+
+            // View 5: Wi-Fi Networks
+            WifiSection {
+                visible: controlPanel.currentView === "wifi"
+            }
+
+            // View 6: Bluetooth Devices
+            BluetoothSection {
+                visible: controlPanel.currentView === "bluetooth"
             }
 
         }
