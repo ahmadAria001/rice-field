@@ -1,0 +1,159 @@
+import "../../theme"
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Io
+import Quickshell.Wayland
+
+PanelWindow {
+    id: root
+
+    anchors.top: true
+    anchors.bottom: true
+    anchors.left: true
+    anchors.right: true
+    color: "transparent"
+    visible: false
+    WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.keyboardFocus: root.visible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+
+    IpcHandler {
+        function toggle() {
+            root.visible = !root.visible;
+            if (root.visible) {
+                searchField.text = "";
+                searchField.forceActiveFocus();
+                appList.currentIndex = 0;
+            }
+        }
+
+        target: "launcher"
+    }
+
+    // Backdrop Dismissal
+    MouseArea {
+        anchors.fill: parent
+        onClicked: root.visible = false
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#80000000" // 50% opacity black backdrop
+        }
+
+    }
+
+    // UI Layout (Center Modal Card)
+    Rectangle {
+        id: card
+
+        width: 580
+        height: 480
+        anchors.centerIn: parent
+        color: Theme.base
+        radius: Theme.radiusLg
+        border.color: Theme.surface0
+        border.width: Theme.borderWidth
+
+        MouseArea {
+            // prevent click events from propagating to the backdrop
+
+            anchors.fill: parent
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 16
+            spacing: 12
+
+            // Top: TextField for real-time search
+            TextField {
+                id: searchField
+
+                Layout.fillWidth: true
+                placeholderText: "Search applications..."
+                placeholderTextColor: Theme.subtext0
+                font.pixelSize: Theme.fontXl
+                color: Theme.text
+                focus: true
+                Keys.onPressed: (event) => {
+                    if (event.key === Qt.Key_Escape) {
+                        root.visible = false;
+                        event.accepted = true;
+                    } else if (event.key === Qt.Key_Down) {
+                        appList.incrementCurrentIndex();
+                        event.accepted = true;
+                    } else if (event.key === Qt.Key_Up) {
+                        appList.decrementCurrentIndex();
+                        event.accepted = true;
+                    } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                        if (appList.currentItem)
+                            appList.currentItem.launch();
+
+                        event.accepted = true;
+                    }
+                }
+
+                background: Rectangle {
+                    color: Theme.surface0
+                    radius: Theme.radiusSm
+                    border.color: searchField.activeFocus ? Theme.mauve : Theme.surface1
+                    border.width: Theme.borderWidth
+                }
+
+            }
+
+            // Bottom: ListView displaying matched applications
+            ListView {
+                id: appList
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+                spacing: 4
+
+                model: ScriptModel {
+                    id: appModel
+
+                    values: {
+                        const search = searchField.text.toLowerCase();
+                        if (!DesktopEntries || !DesktopEntries.applications || !DesktopEntries.applications.values)
+                            return [];
+
+                        const allApps = DesktopEntries.applications.values;
+                        const filtered = allApps.filter((app) => {
+                            if (app.noDisplay)
+                                return false;
+
+                            if (!app.name)
+                                return false;
+
+                            return app.name.toLowerCase().includes(search);
+                        });
+                        filtered.sort((a, b) => {
+                            const nameA = (a.name || "").toLowerCase();
+                            const nameB = (b.name || "").toLowerCase();
+                            if (nameA < nameB)
+                                return -1;
+
+                            if (nameA > nameB)
+                                return 1;
+
+                            return 0;
+                        });
+                        return filtered;
+                    }
+                }
+
+                delegate: AppItem {
+                    isCurrent: index === appList.currentIndex
+                    onLaunched: root.visible = false
+                }
+
+            }
+
+        }
+
+    }
+
+}

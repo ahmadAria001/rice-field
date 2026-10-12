@@ -1,0 +1,1 @@
+../../components/tray/TrayMenu.qml
