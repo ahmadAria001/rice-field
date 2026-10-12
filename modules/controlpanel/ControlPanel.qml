@@ -229,6 +229,10 @@ PopupWindow {
                 MediaSection {
                 }
 
+                // InferHub AI Usage (via PakAI)
+                InferhubSection {
+                }
+
                 // Session Actions (Lock, Suspend, Reboot, Power Off)
                 SessionSection {
                 }
