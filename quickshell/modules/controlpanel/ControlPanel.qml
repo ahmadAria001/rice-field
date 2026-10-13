@@ -14,7 +14,7 @@ PopupWindow {
     property bool shown: false
 
     property string previousView: "main"
-    property real viewOffset: 28
+    property real viewOffset: 22
 
     function navigateTo(viewName) {
         if (currentView === viewName) return;
@@ -319,8 +319,8 @@ PopupWindow {
 
                 Behavior on implicitHeight {
                     NumberAnimation {
-                        duration: Theme.animNormal
-                        easing.type: Theme.easeEntrance
+                        duration: Theme.animView
+                        easing.type: Theme.easeView
                         onFinished: {
                             controlPanel.windowHeight = controlPanel.targetHeight;
                         }
@@ -348,8 +348,8 @@ PopupWindow {
                     }
                     Behavior on x {
                         NumberAnimation {
-                            duration: Theme.animNormal
-                            easing.type: Theme.easeEntrance
+                            duration: Theme.animView
+                            easing.type: Theme.easeView
                         }
                     }
 
@@ -396,7 +396,7 @@ PopupWindow {
                         }
                     }
                     Behavior on x {
-                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                        NumberAnimation { duration: Theme.animView; easing.type: Theme.easeView }
                     }
 
                     AudioMixer {
@@ -425,7 +425,7 @@ PopupWindow {
                         }
                     }
                     Behavior on x {
-                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                        NumberAnimation { duration: Theme.animView; easing.type: Theme.easeView }
                     }
 
                     BrightnessSection {
@@ -454,7 +454,7 @@ PopupWindow {
                         }
                     }
                     Behavior on x {
-                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                        NumberAnimation { duration: Theme.animView; easing.type: Theme.easeView }
                     }
 
                     WallpaperSection {
@@ -484,7 +484,7 @@ PopupWindow {
                         }
                     }
                     Behavior on x {
-                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                        NumberAnimation { duration: Theme.animView; easing.type: Theme.easeView }
                     }
 
                     WifiSection {
@@ -514,7 +514,7 @@ PopupWindow {
                         }
                     }
                     Behavior on x {
-                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                        NumberAnimation { duration: Theme.animView; easing.type: Theme.easeView }
                     }
 
                     BluetoothSection {
