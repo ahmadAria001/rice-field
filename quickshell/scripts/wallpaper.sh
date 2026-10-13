@@ -2,13 +2,39 @@
 set -e
 
 ACTION="${1:-list}"
-STATE_FILE="$HOME/.config/quickshell/current_wallpaper.txt"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/quickshell"
+STATE_FILE="$STATE_DIR/current_wallpaper.txt"
+
+# Ensure state directory exists
+mkdir -p "$STATE_DIR"
+
+# Migrate old state file if it exists and new one does not
+if [ ! -f "$STATE_FILE" ]; then
+    if [ -f "$HOME/.config/quickshell/current_wallpaper.txt" ]; then
+        cp "$HOME/.config/quickshell/current_wallpaper.txt" "$STATE_FILE"
+    elif [ -f "$HOME/Codes/rice-field/quickshell/current_wallpaper.txt" ]; then
+        cp "$HOME/Codes/rice-field/quickshell/current_wallpaper.txt" "$STATE_FILE"
+    fi
+fi
 
 ensure_hyprpaper() {
     if ! pgrep -x hyprpaper >/dev/null 2>&1; then
         setsid -f hyprpaper >/dev/null 2>&1
-        sleep 0.3
     fi
+}
+
+wait_for_hyprpaper() {
+    ensure_hyprpaper
+    local count=0
+    # Bounded retry: up to ~5 seconds (50 * 0.1s)
+    while [ $count -lt 50 ]; do
+        if hyprctl hyprpaper listactive >/dev/null 2>&1; then
+            return 0
+        fi
+        sleep 0.1
+        count=$((count + 1))
+    done
+    return 1
 }
 
 case "$ACTION" in
@@ -71,8 +97,24 @@ print(json.dumps(files))
             cat "$STATE_FILE"
         fi
         ;;
+    restore)
+        if [ ! -f "$STATE_FILE" ]; then
+            exit 0
+        fi
+        SAVED_IMG=$(head -n 1 "$STATE_FILE" | tr -d '\r\n')
+        if [ -z "$SAVED_IMG" ] || [ ! -f "$SAVED_IMG" ]; then
+            exit 0
+        fi
+        if wait_for_hyprpaper; then
+            hyprctl hyprpaper wallpaper ",$SAVED_IMG" >/dev/null 2>&1 || true
+            echo "Restored: $SAVED_IMG"
+        else
+            echo "Warning: hyprpaper did not become ready within 5s" >&2
+            exit 0
+        fi
+        ;;
     *)
-        echo "Usage: $0 [list|set <path>|get]"
+        echo "Usage: $0 [list|set <path>|get|restore]"
         exit 1
         ;;
 esac
