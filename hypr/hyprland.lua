@@ -22,6 +22,23 @@
 ------------------
 
 -- See https://wiki.hypr.land/configuring/core/monitors/
+-- Built-in laptop display (Lenovo)
+hl.monitor({
+    output   = "desc:Lenovo Group Limited 0x9056",
+    mode     = "1920x1080@165.004",
+    position = "0x0",
+    scale    = 1.5,
+})
+
+-- External monitor (AOC 24G4)
+hl.monitor({
+    output   = "desc:AOC 24G4 12VQ6HA008756",
+    mode     = "1920x1080@60",
+    position = "1280x0",
+    scale    = 1,
+})
+
+-- Fallback for unknown / hotplugged displays
 hl.monitor({
     output   = "",
     mode     = "preferred",
