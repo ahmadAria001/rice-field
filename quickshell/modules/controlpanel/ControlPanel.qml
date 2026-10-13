@@ -14,19 +14,16 @@ PopupWindow {
     property bool shown: false
 
     property string previousView: "main"
-    property bool isNavigatingBack: false
     property real viewOffset: 28
 
     function navigateTo(viewName) {
         if (currentView === viewName) return;
-        isNavigatingBack = false;
         previousView = currentView;
         currentView = viewName;
     }
 
     function navigateBack() {
         if (currentView === "main") return;
-        isNavigatingBack = true;
         previousView = currentView;
         currentView = "main";
     }
@@ -338,10 +335,7 @@ PopupWindow {
                     property bool isActive: controlPanel.currentView === "main"
                     visible: isActive || opacity > 0.001
                     opacity: isActive ? 1.0 : 0.0
-                    x: {
-                        if (isActive) return 0;
-                        return controlPanel.isNavigatingBack ? controlPanel.viewOffset : -controlPanel.viewOffset;
-                    }
+                    x: isActive ? 0 : -controlPanel.viewOffset
 
                     Behavior on opacity {
                         NumberAnimation {
@@ -387,10 +381,7 @@ PopupWindow {
                     property bool isActive: controlPanel.currentView === "audio"
                     visible: isActive || opacity > 0.001
                     opacity: isActive ? 1.0 : 0.0
-                    x: {
-                        if (isActive) return 0;
-                        return controlPanel.isNavigatingBack ? -controlPanel.viewOffset : controlPanel.viewOffset;
-                    }
+                    x: isActive ? 0 : controlPanel.viewOffset
 
                     Behavior on opacity {
                         NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
@@ -413,10 +404,7 @@ PopupWindow {
                     property bool isActive: controlPanel.currentView === "brightness"
                     visible: isActive || opacity > 0.001
                     opacity: isActive ? 1.0 : 0.0
-                    x: {
-                        if (isActive) return 0;
-                        return controlPanel.isNavigatingBack ? -controlPanel.viewOffset : controlPanel.viewOffset;
-                    }
+                    x: isActive ? 0 : controlPanel.viewOffset
 
                     Behavior on opacity {
                         NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
@@ -439,10 +427,7 @@ PopupWindow {
                     property bool isActive: controlPanel.currentView === "wallpapers"
                     visible: isActive || opacity > 0.001
                     opacity: isActive ? 1.0 : 0.0
-                    x: {
-                        if (isActive) return 0;
-                        return controlPanel.isNavigatingBack ? -controlPanel.viewOffset : controlPanel.viewOffset;
-                    }
+                    x: isActive ? 0 : controlPanel.viewOffset
 
                     Behavior on opacity {
                         NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
@@ -466,10 +451,7 @@ PopupWindow {
                     property bool isActive: controlPanel.currentView === "wifi"
                     visible: isActive || opacity > 0.001
                     opacity: isActive ? 1.0 : 0.0
-                    x: {
-                        if (isActive) return 0;
-                        return controlPanel.isNavigatingBack ? -controlPanel.viewOffset : controlPanel.viewOffset;
-                    }
+                    x: isActive ? 0 : controlPanel.viewOffset
 
                     Behavior on opacity {
                         NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
@@ -493,10 +475,7 @@ PopupWindow {
                     property bool isActive: controlPanel.currentView === "bluetooth"
                     visible: isActive || opacity > 0.001
                     opacity: isActive ? 1.0 : 0.0
-                    x: {
-                        if (isActive) return 0;
-                        return controlPanel.isNavigatingBack ? -controlPanel.viewOffset : controlPanel.viewOffset;
-                    }
+                    x: isActive ? 0 : controlPanel.viewOffset
 
                     Behavior on opacity {
                         NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
