@@ -13,6 +13,24 @@ PopupWindow {
     property string currentView: "main"
     property bool shown: false
 
+    property string previousView: "main"
+    property bool isNavigatingBack: false
+    property real viewOffset: 28
+
+    function navigateTo(viewName) {
+        if (currentView === viewName) return;
+        isNavigatingBack = false;
+        previousView = currentView;
+        currentView = viewName;
+    }
+
+    function navigateBack() {
+        if (currentView === "main") return;
+        isNavigatingBack = true;
+        previousView = currentView;
+        currentView = "main";
+    }
+
     function open() {
         controlPanel.shown = true;
     }
@@ -49,7 +67,13 @@ PopupWindow {
     Shortcut {
         sequence: "Escape"
         enabled: controlPanel.shown
-        onActivated: controlPanel.close()
+        onActivated: {
+            if (controlPanel.currentView !== "main") {
+                controlPanel.navigateBack();
+            } else {
+                controlPanel.close();
+            }
+        }
     }
 
     Connections {
@@ -122,6 +146,7 @@ PopupWindow {
             // When exit finishes and opacity hits 0, reset subview to main
             if (!controlPanel.shown && opacity <= 0.001) {
                 controlPanel.currentView = "main";
+                controlPanel.previousView = "main";
             }
         }
 
@@ -129,7 +154,7 @@ PopupWindow {
         border.color: Theme.surface0
         border.width: Theme.borderWidth
         radius: Theme.radiusLg
-        implicitHeight: mainLayout.implicitHeight + 28
+        implicitHeight: headerRow.implicitHeight + viewViewport.implicitHeight + 42
 
         ColumnLayout {
             id: mainLayout
@@ -138,74 +163,87 @@ PopupWindow {
             anchors.margins: 14
             spacing: 14
 
-            // Header Row (Dynamic based on currentView)
+            // Header Row (Crossfades between subpage title/back button and battery status)
             RowLayout {
+                id: headerRow
+
                 Layout.fillWidth: true
                 spacing: 8
 
-                Text {
-                    visible: controlPanel.currentView !== "main"
-                    text: {
-                        if (controlPanel.currentView === "audio")
-                            return "Audio & Mixer";
+                // Subpage title + back button group
+                RowLayout {
+                    spacing: 8
+                    opacity: controlPanel.currentView !== "main" ? 1.0 : 0.0
+                    visible: opacity > 0.001
 
-                        if (controlPanel.currentView === "brightness")
-                            return "Display Brightness";
-
-                        if (controlPanel.currentView === "wallpapers")
-                            return "Wallpapers";
-
-                        if (controlPanel.currentView === "wifi")
-                            return "Wi-Fi Networks";
-
-                        if (controlPanel.currentView === "bluetooth")
-                            return "Bluetooth Devices";
-
-                        return "";
-                    }
-                    font.family: "JetBrainsMono Nerd Font, sans-serif"
-                    font.pixelSize: Theme.fontMd
-                    font.bold: true
-                    color: Theme.text
-                }
-
-                // Back Button (shown only on subpages)
-                Rectangle {
-                    visible: controlPanel.currentView !== "main"
-                    implicitWidth: 28
-                    implicitHeight: 28
-                    radius: Theme.radiusSm
-                    color: backMouse.containsMouse ? Theme.surface1 : "transparent"
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "󰁍"
-                        font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
-                        font.pixelSize: Theme.fontLg
-                        color: Theme.mauve
-                    }
-
-                    MouseArea {
-                        id: backMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            controlPanel.currentView = "main";
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Theme.animFast
+                            easing.type: Theme.easeGeneral
                         }
                     }
 
+                    Rectangle {
+                        implicitWidth: 28
+                        implicitHeight: 28
+                        radius: Theme.radiusSm
+                        color: backMouse.containsMouse ? Theme.surface1 : "transparent"
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: "󰁍"
+                            font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
+                            font.pixelSize: Theme.fontLg
+                            color: Theme.mauve
+                        }
+
+                        MouseArea {
+                            id: backMouse
+
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: controlPanel.navigateBack()
+                        }
+                    }
+
+                    Text {
+                        text: {
+                            if (controlPanel.currentView === "audio")
+                                return "Audio & Mixer";
+                            if (controlPanel.currentView === "brightness")
+                                return "Display Brightness";
+                            if (controlPanel.currentView === "wallpapers")
+                                return "Wallpapers";
+                            if (controlPanel.currentView === "wifi")
+                                return "Wi-Fi Networks";
+                            if (controlPanel.currentView === "bluetooth")
+                                return "Bluetooth Devices";
+                            return "";
+                        }
+                        font.family: "JetBrainsMono Nerd Font, sans-serif"
+                        font.pixelSize: Theme.fontMd
+                        font.bold: true
+                        color: Theme.text
+                    }
                 }
 
                 Item {
                     Layout.fillWidth: true
                 }
 
-                // Battery indicator (shown on main page)
+                // Battery indicator group (shown on main page)
                 RowLayout {
                     spacing: 6
-                    visible: controlPanel.currentView === "main" && UPower.displayDevice && UPower.displayDevice.isPresent
+                    opacity: controlPanel.currentView === "main" ? 1.0 : 0.0
+                    visible: opacity > 0.001 && UPower.displayDevice && UPower.displayDevice.isPresent
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Theme.animFast
+                            easing.type: Theme.easeGeneral
+                        }
+                    }
 
                     Text {
                         text: {
@@ -213,31 +251,22 @@ PopupWindow {
                             var isCharging = UPower.displayDevice && UPower.displayDevice.state === UPowerDeviceState.Charging;
                             if (isCharging)
                                 return "󰂄";
-
                             if (pct >= 90)
                                 return "󰁹";
-
                             if (pct >= 80)
                                 return "󰂂";
-
                             if (pct >= 70)
                                 return "󰂁";
-
                             if (pct >= 60)
                                 return "󰂀";
-
                             if (pct >= 50)
                                 return "󰁿";
-
                             if (pct >= 40)
                                 return "󰁾";
-
                             if (pct >= 30)
                                 return "󰁽";
-
                             if (pct >= 20)
                                 return "󰁼";
-
                             return "󰁺";
                         }
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
@@ -252,84 +281,214 @@ PopupWindow {
                         font.bold: true
                         color: Theme.subtext0
                     }
-
                 }
-
             }
 
-            // View 1: Main Dashboard
-            ColumnLayout {
+            // Single Clipped Viewport for Subviews
+            Item {
+                id: viewViewport
+
                 Layout.fillWidth: true
-                spacing: 14
-                visible: controlPanel.currentView === "main"
+                clip: true
+                implicitHeight: {
+                    if (controlPanel.currentView === "main") return mainView.implicitHeight;
+                    if (controlPanel.currentView === "audio") return audioView.implicitHeight;
+                    if (controlPanel.currentView === "brightness") return brightView.implicitHeight;
+                    if (controlPanel.currentView === "wallpapers") return wallView.implicitHeight;
+                    if (controlPanel.currentView === "wifi") return wifiView.implicitHeight;
+                    if (controlPanel.currentView === "bluetooth") return btView.implicitHeight;
+                    return mainView.implicitHeight;
+                }
 
-                // Sliders (Volume & Brightness)
-                SliderSection {
-                    onOpenAudioMixer: {
-                        controlPanel.currentView = "audio";
-                    }
-                    onOpenBrightness: {
-                        controlPanel.currentView = "brightness";
+                Behavior on implicitHeight {
+                    NumberAnimation {
+                        duration: Theme.animNormal
+                        easing.type: Theme.easeEntrance
                     }
                 }
 
-                // Quick Toggles (Wi-Fi, Bluetooth, Night Light, Caffeine, DND, Screenshot, Wallpaper)
-                QuickToggles {
-                    onRequestClose: {
-                        controlPanel.close();
+                // View 1: Main Dashboard
+                Item {
+                    id: mainWrapper
+                    width: parent.width
+                    height: mainView.implicitHeight
+                    property bool isActive: controlPanel.currentView === "main"
+                    visible: isActive || opacity > 0.001
+                    opacity: isActive ? 1.0 : 0.0
+                    x: {
+                        if (isActive) return 0;
+                        return controlPanel.isNavigatingBack ? controlPanel.viewOffset : -controlPanel.viewOffset;
                     }
-                    onOpenWallpapers: {
-                        controlPanel.currentView = "wallpapers";
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: Theme.animNormal
+                            easing.type: Theme.easeEntrance
+                        }
                     }
-                    onOpenWifi: {
-                        controlPanel.currentView = "wifi";
+                    Behavior on x {
+                        NumberAnimation {
+                            duration: Theme.animNormal
+                            easing.type: Theme.easeEntrance
+                        }
                     }
-                    onOpenBluetooth: {
-                        controlPanel.currentView = "bluetooth";
+
+                    ColumnLayout {
+                        id: mainView
+                        width: parent.width
+                        spacing: 14
+
+                        SliderSection {
+                            onOpenAudioMixer: controlPanel.navigateTo("audio")
+                            onOpenBrightness: controlPanel.navigateTo("brightness")
+                        }
+
+                        QuickToggles {
+                            onRequestClose: controlPanel.close()
+                            onOpenWallpapers: controlPanel.navigateTo("wallpapers")
+                            onOpenWifi: controlPanel.navigateTo("wifi")
+                            onOpenBluetooth: controlPanel.navigateTo("bluetooth")
+                        }
+
+                        MediaSection {}
+                        InferhubSection {}
+                        SessionSection {}
                     }
                 }
 
-                // MPRIS Media Player
-                MediaSection {
+                // View 2: Audio Mixer
+                Item {
+                    id: audioWrapper
+                    width: parent.width
+                    height: audioView.implicitHeight
+                    property bool isActive: controlPanel.currentView === "audio"
+                    visible: isActive || opacity > 0.001
+                    opacity: isActive ? 1.0 : 0.0
+                    x: {
+                        if (isActive) return 0;
+                        return controlPanel.isNavigatingBack ? -controlPanel.viewOffset : controlPanel.viewOffset;
+                    }
+
+                    Behavior on opacity {
+                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                    }
+                    Behavior on x {
+                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                    }
+
+                    AudioMixer {
+                        id: audioView
+                        width: parent.width
+                    }
                 }
 
-                // InferHub AI Usage (via PakAI)
-                InferhubSection {
+                // View 3: Brightness
+                Item {
+                    id: brightWrapper
+                    width: parent.width
+                    height: brightView.implicitHeight
+                    property bool isActive: controlPanel.currentView === "brightness"
+                    visible: isActive || opacity > 0.001
+                    opacity: isActive ? 1.0 : 0.0
+                    x: {
+                        if (isActive) return 0;
+                        return controlPanel.isNavigatingBack ? -controlPanel.viewOffset : controlPanel.viewOffset;
+                    }
+
+                    Behavior on opacity {
+                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                    }
+                    Behavior on x {
+                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                    }
+
+                    BrightnessSection {
+                        id: brightView
+                        width: parent.width
+                    }
                 }
 
-                // Session Actions (Lock, Suspend, Reboot, Power Off)
-                SessionSection {
+                // View 4: Wallpapers
+                Item {
+                    id: wallWrapper
+                    width: parent.width
+                    height: wallView.implicitHeight
+                    property bool isActive: controlPanel.currentView === "wallpapers"
+                    visible: isActive || opacity > 0.001
+                    opacity: isActive ? 1.0 : 0.0
+                    x: {
+                        if (isActive) return 0;
+                        return controlPanel.isNavigatingBack ? -controlPanel.viewOffset : controlPanel.viewOffset;
+                    }
+
+                    Behavior on opacity {
+                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                    }
+                    Behavior on x {
+                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                    }
+
+                    WallpaperSection {
+                        id: wallView
+                        width: parent.width
+                        visible: wallWrapper.isActive
+                    }
                 }
 
-            }
+                // View 5: Wi-Fi Networks
+                Item {
+                    id: wifiWrapper
+                    width: parent.width
+                    height: wifiView.implicitHeight
+                    property bool isActive: controlPanel.currentView === "wifi"
+                    visible: isActive || opacity > 0.001
+                    opacity: isActive ? 1.0 : 0.0
+                    x: {
+                        if (isActive) return 0;
+                        return controlPanel.isNavigatingBack ? -controlPanel.viewOffset : controlPanel.viewOffset;
+                    }
 
-            // View 2: Audio Mixer & Sink Switcher
-            AudioMixer {
-                visible: controlPanel.currentView === "audio"
-            }
+                    Behavior on opacity {
+                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                    }
+                    Behavior on x {
+                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                    }
 
-            // View 3: Multi-Monitor Brightness
-            BrightnessSection {
-                visible: controlPanel.currentView === "brightness"
-            }
+                    WifiSection {
+                        id: wifiView
+                        width: parent.width
+                        visible: wifiWrapper.isActive
+                    }
+                }
 
-            // View 4: Wallpaper Selector
-            WallpaperSection {
-                visible: controlPanel.currentView === "wallpapers"
-            }
+                // View 6: Bluetooth Devices
+                Item {
+                    id: btWrapper
+                    width: parent.width
+                    height: btView.implicitHeight
+                    property bool isActive: controlPanel.currentView === "bluetooth"
+                    visible: isActive || opacity > 0.001
+                    opacity: isActive ? 1.0 : 0.0
+                    x: {
+                        if (isActive) return 0;
+                        return controlPanel.isNavigatingBack ? -controlPanel.viewOffset : controlPanel.viewOffset;
+                    }
 
-            // View 5: Wi-Fi Networks
-            WifiSection {
-                visible: controlPanel.currentView === "wifi"
-            }
+                    Behavior on opacity {
+                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                    }
+                    Behavior on x {
+                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                    }
 
-            // View 6: Bluetooth Devices
-            BluetoothSection {
-                visible: controlPanel.currentView === "bluetooth"
+                    BluetoothSection {
+                        id: btView
+                        width: parent.width
+                        visible: btWrapper.isActive
+                    }
+                }
             }
-
         }
-
     }
-
 }
