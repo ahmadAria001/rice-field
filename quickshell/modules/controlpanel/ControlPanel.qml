@@ -56,7 +56,27 @@ PopupWindow {
     visible: shown || container.opacity > 0.001
     color: "transparent"
     implicitWidth: 360
-    implicitHeight: container.implicitHeight
+
+    property real targetHeight: headerRow.implicitHeight + targetViewportHeight + 42
+    readonly property real targetViewportHeight: {
+        if (controlPanel.currentView === "main") return mainView.implicitHeight;
+        if (controlPanel.currentView === "audio") return audioView.implicitHeight;
+        if (controlPanel.currentView === "brightness") return brightView.implicitHeight;
+        if (controlPanel.currentView === "wallpapers") return wallView.implicitHeight;
+        if (controlPanel.currentView === "wifi") return wifiView.implicitHeight;
+        if (controlPanel.currentView === "bluetooth") return btView.implicitHeight;
+        return mainView.implicitHeight;
+    }
+    property real windowHeight: targetHeight
+
+    onTargetHeightChanged: {
+        // Grow immediately if new view is taller to prevent frame clipping
+        if (targetHeight > windowHeight) {
+            windowHeight = targetHeight;
+        }
+    }
+
+    implicitHeight: Math.max(windowHeight, container.implicitHeight)
 
     HyprlandFocusGrab {
         active: controlPanel.backingWindowVisible && controlPanel.shown
@@ -304,6 +324,9 @@ PopupWindow {
                     NumberAnimation {
                         duration: Theme.animNormal
                         easing.type: Theme.easeEntrance
+                        onFinished: {
+                            controlPanel.windowHeight = controlPanel.targetHeight;
+                        }
                     }
                 }
 
