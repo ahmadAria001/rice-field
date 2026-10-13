@@ -9,23 +9,48 @@ import Quickshell.Wayland
 PanelWindow {
     id: root
 
+    property bool shown: false
+
+    function open() {
+        searchField.text = "";
+        searchField.forceActiveFocus();
+        appList.currentIndex = 0;
+        root.shown = true;
+    }
+
+    function close() {
+        root.shown = false;
+    }
+
+    function toggle() {
+        if (root.shown) {
+            root.close();
+        } else {
+            root.open();
+        }
+    }
+
     anchors.top: true
     anchors.bottom: true
     anchors.left: true
     anchors.right: true
     color: "transparent"
-    visible: false
+    visible: shown || cardWrapper.opacity > 0.001
+    WlrLayershell.namespace: "qs-launcher"
     WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.keyboardFocus: root.visible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: root.shown ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
     IpcHandler {
         function toggle() {
-            root.visible = !root.visible;
-            if (root.visible) {
-                searchField.text = "";
-                searchField.forceActiveFocus();
-                appList.currentIndex = 0;
-            }
+            root.toggle();
+        }
+
+        function open() {
+            root.open();
+        }
+
+        function close() {
+            root.close();
         }
 
         target: "launcher"
@@ -34,32 +59,61 @@ PanelWindow {
     // Backdrop Dismissal
     MouseArea {
         anchors.fill: parent
-        onClicked: root.visible = false
+        enabled: root.shown
+        onClicked: root.close()
 
         Rectangle {
             anchors.fill: parent
             color: "#80000000" // 50% opacity black backdrop
-        }
+            opacity: root.shown ? 1.0 : 0.0
 
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: root.shown ? Theme.animNormal : Theme.animExit
+                    easing.type: root.shown ? Theme.easeEntrance : Theme.easeExit
+                }
+            }
+        }
     }
 
-    // UI Layout (Center Modal Card)
-    Rectangle {
-        id: card
+    // UI Layout (Center Modal Card with Scale + Opacity wrapper)
+    Item {
+        id: cardWrapper
 
         width: 580
         height: 480
         anchors.centerIn: parent
-        color: Theme.base
-        radius: Theme.radiusLg
-        border.color: Theme.surface0
-        border.width: Theme.borderWidth
 
-        MouseArea {
-            // prevent click events from propagating to the backdrop
+        opacity: root.shown ? 1.0 : 0.0
+        scale: root.shown ? 1.0 : Theme.scaleDown
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: root.shown ? Theme.animNormal : Theme.animExit
+                easing.type: root.shown ? Theme.easeEntrance : Theme.easeExit
+            }
+        }
+
+        Behavior on scale {
+            NumberAnimation {
+                duration: root.shown ? Theme.animNormal : Theme.animExit
+                easing.type: root.shown ? Theme.easeEntrance : Theme.easeExit
+            }
+        }
+
+        Rectangle {
+            id: card
 
             anchors.fill: parent
-        }
+            color: Theme.base
+            radius: Theme.radiusLg
+            border.color: Theme.surface0
+            border.width: Theme.borderWidth
+
+            MouseArea {
+                // prevent click events from propagating to the backdrop
+                anchors.fill: parent
+            }
 
         ColumnLayout {
             anchors.fill: parent
@@ -78,7 +132,7 @@ PanelWindow {
                 focus: true
                 Keys.onPressed: (event) => {
                     if (event.key === Qt.Key_Escape) {
-                        root.visible = false;
+                        root.close();
                         event.accepted = true;
                     } else if (event.key === Qt.Key_Down) {
                         appList.incrementCurrentIndex();
@@ -147,12 +201,14 @@ PanelWindow {
 
                 delegate: AppItem {
                     isCurrent: index === appList.currentIndex
-                    onLaunched: root.visible = false
+                    onLaunched: root.close()
                 }
 
             }
 
         }
+
+    }
 
     }
 

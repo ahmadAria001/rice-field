@@ -25,4 +25,21 @@ QtObject {
             }
         }
     }
+
+    property FileView motionFile: FileView {
+        path: Quickshell.env("HOME") + "/.config/quickshell/motion.json"
+        watchChanges: true
+        onFileChanged: this.reload()
+        onLoaded: {
+            try {
+                var m = JSON.parse(this.text());
+                if (m.hasOwnProperty("enabled")) {
+                    Theme.motionScale = m.enabled ? 1.0 : 0.0;
+                } else if (m.hasOwnProperty("scale")) {
+                    Theme.motionScale = Number(m.scale);
+                }
+            } catch (e) {
+            }
+        }
+    }
 }

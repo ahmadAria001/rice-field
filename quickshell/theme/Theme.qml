@@ -28,4 +28,19 @@ QtObject {
     readonly property int fontXl: 14
     // State
     property bool dndEnabled: false
+
+    // Motion tokens
+    property real motionScale: 1.0
+
+    readonly property int animFast: Math.round(120 * motionScale)
+    readonly property int animNormal: Math.round(180 * motionScale)
+    readonly property int animSlow: Math.round(260 * motionScale)
+    readonly property int animExit: Math.round(115 * motionScale)
+
+    readonly property int easeEntrance: Easing.OutCubic
+    readonly property int easeExit: Easing.InCubic
+    readonly property int easeGeneral: Easing.OutQuad
+
+    readonly property real scaleDown: 0.96
+    readonly property real slideDistance: 8
 }
