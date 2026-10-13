@@ -3,3 +3,5 @@ quickshell/current_wallpaper.txt
 .thumbnails
 quickshell/.thumbnails
 *.bak
+clipboard_history.json
+quickshell/clipboard_history.json
