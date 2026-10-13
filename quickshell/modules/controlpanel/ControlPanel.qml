@@ -338,9 +338,12 @@ PopupWindow {
                     x: isActive ? 0 : -controlPanel.viewOffset
 
                     Behavior on opacity {
-                        NumberAnimation {
-                            duration: Theme.animNormal
-                            easing.type: Theme.easeEntrance
+                        SequentialAnimation {
+                            PauseAnimation { duration: mainWrapper.isActive ? 50 : 0 }
+                            NumberAnimation {
+                                duration: mainWrapper.isActive ? Theme.animNormal : 100
+                                easing.type: Theme.easeEntrance
+                            }
                         }
                     }
                     Behavior on x {
@@ -384,7 +387,13 @@ PopupWindow {
                     x: isActive ? 0 : controlPanel.viewOffset
 
                     Behavior on opacity {
-                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                        SequentialAnimation {
+                            PauseAnimation { duration: audioWrapper.isActive ? 50 : 0 }
+                            NumberAnimation {
+                                duration: audioWrapper.isActive ? Theme.animNormal : 100
+                                easing.type: Theme.easeEntrance
+                            }
+                        }
                     }
                     Behavior on x {
                         NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
@@ -407,7 +416,13 @@ PopupWindow {
                     x: isActive ? 0 : controlPanel.viewOffset
 
                     Behavior on opacity {
-                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                        SequentialAnimation {
+                            PauseAnimation { duration: brightWrapper.isActive ? 50 : 0 }
+                            NumberAnimation {
+                                duration: brightWrapper.isActive ? Theme.animNormal : 100
+                                easing.type: Theme.easeEntrance
+                            }
+                        }
                     }
                     Behavior on x {
                         NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
@@ -430,7 +445,13 @@ PopupWindow {
                     x: isActive ? 0 : controlPanel.viewOffset
 
                     Behavior on opacity {
-                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                        SequentialAnimation {
+                            PauseAnimation { duration: wallWrapper.isActive ? 50 : 0 }
+                            NumberAnimation {
+                                duration: wallWrapper.isActive ? Theme.animNormal : 100
+                                easing.type: Theme.easeEntrance
+                            }
+                        }
                     }
                     Behavior on x {
                         NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
@@ -454,7 +475,13 @@ PopupWindow {
                     x: isActive ? 0 : controlPanel.viewOffset
 
                     Behavior on opacity {
-                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                        SequentialAnimation {
+                            PauseAnimation { duration: wifiWrapper.isActive ? 50 : 0 }
+                            NumberAnimation {
+                                duration: wifiWrapper.isActive ? Theme.animNormal : 100
+                                easing.type: Theme.easeEntrance
+                            }
+                        }
                     }
                     Behavior on x {
                         NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
@@ -478,7 +505,13 @@ PopupWindow {
                     x: isActive ? 0 : controlPanel.viewOffset
 
                     Behavior on opacity {
-                        NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
+                        SequentialAnimation {
+                            PauseAnimation { duration: btWrapper.isActive ? 50 : 0 }
+                            NumberAnimation {
+                                duration: btWrapper.isActive ? Theme.animNormal : 100
+                                easing.type: Theme.easeEntrance
+                            }
+                        }
                     }
                     Behavior on x {
                         NumberAnimation { duration: Theme.animNormal; easing.type: Theme.easeEntrance }
