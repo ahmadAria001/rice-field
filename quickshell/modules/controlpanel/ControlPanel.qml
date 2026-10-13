@@ -11,39 +11,50 @@ PopupWindow {
 
     property var triggerItem: null
     property string currentView: "main"
+    property bool shown: false
+
+    function open() {
+        controlPanel.shown = true;
+    }
+
+    function close() {
+        if (!controlPanel.shown) return;
+        controlPanel.shown = false;
+    }
+
+    function toggle() {
+        if (controlPanel.shown) {
+            controlPanel.close();
+        } else {
+            controlPanel.open();
+        }
+    }
 
     anchor.item: triggerItem
     anchor.edges: Edges.Bottom
     anchor.gravity: Edges.Bottom
     anchor.margins.top: 40
     anchor.margins.right: 100
-    visible: false
+    visible: shown || container.opacity > 0.001
     color: "transparent"
     implicitWidth: 360
     implicitHeight: container.implicitHeight
-    onVisibleChanged: {
-        if (!visible)
-            controlPanel.currentView = "main";
-
-    }
 
     HyprlandFocusGrab {
-        active: controlPanel.backingWindowVisible
+        active: controlPanel.backingWindowVisible && controlPanel.shown
         windows: [controlPanel]
-        onCleared: controlPanel.visible = false
+        onCleared: controlPanel.close()
     }
 
     Shortcut {
         sequence: "Escape"
-        enabled: controlPanel.visible
-        onActivated: controlPanel.visible = false
+        enabled: controlPanel.shown
+        onActivated: controlPanel.close()
     }
 
     Connections {
         function onFocusedWorkspaceChanged() {
-            if (controlPanel.visible)
-                controlPanel.visible = false;
-
+            controlPanel.close();
         }
 
         target: Hyprland
@@ -51,7 +62,15 @@ PopupWindow {
 
     IpcHandler {
         function toggle() {
-            controlPanel.visible = !controlPanel.visible;
+            controlPanel.toggle();
+        }
+
+        function open() {
+            controlPanel.open();
+        }
+
+        function close() {
+            controlPanel.close();
         }
 
         target: "controlpanel"
@@ -60,7 +79,52 @@ PopupWindow {
     Rectangle {
         id: container
 
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.right: parent.right
+        enabled: controlPanel.shown
+        y: {
+            if (controlPanel.shown) return 0;
+            if (Theme.panelSlideDirection === "fromTop") return -Theme.slideDistancePanel;
+            if (Theme.panelSlideDirection === "fromBottom") return Theme.slideDistancePanel;
+            return 0;
+        }
+        x: {
+            if (controlPanel.shown) return 0;
+            if (Theme.panelSlideDirection === "fromRight") return Theme.slideDistancePanel;
+            if (Theme.panelSlideDirection === "fromLeft") return -Theme.slideDistancePanel;
+            return 0;
+        }
+
+        opacity: controlPanel.shown ? 1.0 : 0.0
+
+        Behavior on y {
+            NumberAnimation {
+                duration: controlPanel.shown ? Theme.animNormal : Theme.animExit
+                easing.type: controlPanel.shown ? Theme.easeEntrance : Theme.easeExit
+            }
+        }
+
+        Behavior on x {
+            NumberAnimation {
+                duration: controlPanel.shown ? Theme.animNormal : Theme.animExit
+                easing.type: controlPanel.shown ? Theme.easeEntrance : Theme.easeExit
+            }
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: controlPanel.shown ? Theme.animNormal : Theme.animExit
+                easing.type: controlPanel.shown ? Theme.easeEntrance : Theme.easeExit
+            }
+        }
+
+        onOpacityChanged: {
+            // When exit finishes and opacity hits 0, reset subview to main
+            if (!controlPanel.shown && opacity <= 0.001) {
+                controlPanel.currentView = "main";
+            }
+        }
+
         color: Theme.mantle
         border.color: Theme.surface0
         border.width: Theme.borderWidth
@@ -212,7 +276,7 @@ PopupWindow {
                 // Quick Toggles (Wi-Fi, Bluetooth, Night Light, Caffeine, DND, Screenshot, Wallpaper)
                 QuickToggles {
                     onRequestClose: {
-                        controlPanel.visible = false;
+                        controlPanel.close();
                     }
                     onOpenWallpapers: {
                         controlPanel.currentView = "wallpapers";

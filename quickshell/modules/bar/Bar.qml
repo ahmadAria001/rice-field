@@ -85,7 +85,7 @@ PanelWindow {
                     id: statusPill
 
                     onClicked: {
-                        controlPanel.visible = !controlPanel.visible;
+                        controlPanel.toggle();
                     }
                 }
 

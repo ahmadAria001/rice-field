@@ -43,4 +43,7 @@ QtObject {
 
     readonly property real scaleDown: 0.96
     readonly property real slideDistance: 8
+    readonly property real slideDistancePanel: 16
+    // Slide direction token for panels: "fromTop", "fromRight", "fromLeft", "fromBottom"
+    readonly property string panelSlideDirection: "fromTop"
 }
