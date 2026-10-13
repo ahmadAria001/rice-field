@@ -29,13 +29,22 @@ ColumnLayout {
         actionProc.exec([Quickshell.env("HOME") + "/.config/quickshell/scripts/bluetooth.sh", action, mac]);
     }
 
+    Timer {
+        id: deferScanTimer
+        interval: Theme.animNormal
+        repeat: false
+        onTriggered: root.scanDevices()
+    }
+
     Component.onCompleted: {
-        scanDevices();
+        deferScanTimer.start();
     }
 
     onVisibleChanged: {
         if (visible) {
-            scanDevices();
+            deferScanTimer.restart();
+        } else {
+            deferScanTimer.stop();
         }
     }
 

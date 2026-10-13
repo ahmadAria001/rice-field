@@ -29,13 +29,21 @@ ColumnLayout {
 
     spacing: 12
     Layout.fillWidth: true
+    Timer {
+        id: deferLoadTimer
+        interval: Theme.animNormal
+        repeat: false
+        onTriggered: root.loadWallpapers()
+    }
+
     Component.onCompleted: {
-        loadWallpapers();
+        deferLoadTimer.start();
     }
     onVisibleChanged: {
         if (visible)
-            loadWallpapers();
-
+            deferLoadTimer.restart();
+        else
+            deferLoadTimer.stop();
     }
 
     Process {

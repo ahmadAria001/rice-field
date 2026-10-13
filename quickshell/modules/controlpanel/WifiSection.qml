@@ -40,15 +40,24 @@ ColumnLayout {
         disconnectProc.exec([Quickshell.env("HOME") + "/.config/quickshell/scripts/network.sh", "disconnect", ssid]);
     }
 
+    Timer {
+        id: deferScanTimer
+        interval: Theme.animNormal
+        repeat: false
+        onTriggered: root.scanNetworks()
+    }
+
     Component.onCompleted: {
-        scanNetworks();
+        deferScanTimer.start();
     }
 
     onVisibleChanged: {
         if (visible) {
             root.passwordInputSsid = "";
             root.passwordText = "";
-            scanNetworks();
+            deferScanTimer.restart();
+        } else {
+            deferScanTimer.stop();
         }
     }
 
