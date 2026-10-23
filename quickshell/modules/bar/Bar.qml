@@ -105,6 +105,8 @@ PanelWindow {
                 }
 
                 PowerButton {
+                    active: controlPanel.shown && controlPanel.currentView === "power"
+                    onClicked: controlPanel.togglePower()
                 }
 
             }

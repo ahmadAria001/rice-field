@@ -45,6 +45,19 @@ PopupWindow {
         }
     }
 
+    // The bar's power button opens the panel straight into the power view, so the
+    // four session actions have exactly one home. Pressing it again while that view is
+    // already up closes the panel, matching how the status pill toggles.
+    function togglePower() {
+        if (controlPanel.shown && controlPanel.currentView === "power") {
+            controlPanel.close();
+            return ;
+        }
+
+        controlPanel.open();
+        controlPanel.navigateTo("power");
+    }
+
     anchor.item: triggerItem
     anchor.edges: Edges.Bottom
     anchor.gravity: Edges.Bottom
@@ -62,6 +75,7 @@ PopupWindow {
         if (controlPanel.currentView === "wallpapers") return wallView.implicitHeight;
         if (controlPanel.currentView === "wifi") return wifiView.implicitHeight;
         if (controlPanel.currentView === "bluetooth") return btView.implicitHeight;
+        if (controlPanel.currentView === "power") return powerView.implicitHeight;
         return mainView.implicitHeight;
     }
     property real windowHeight: targetHeight
@@ -112,6 +126,10 @@ PopupWindow {
 
         function close() {
             controlPanel.close();
+        }
+
+        function power() {
+            controlPanel.togglePower();
         }
 
         target: "controlpanel"
@@ -236,6 +254,8 @@ PopupWindow {
                                 return "Wi-Fi Networks";
                             if (controlPanel.currentView === "bluetooth")
                                 return "Bluetooth Devices";
+                            if (controlPanel.currentView === "power")
+                                return "Power";
                             return "";
                         }
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
@@ -314,6 +334,7 @@ PopupWindow {
                     if (controlPanel.currentView === "wallpapers") return wallView.implicitHeight;
                     if (controlPanel.currentView === "wifi") return wifiView.implicitHeight;
                     if (controlPanel.currentView === "bluetooth") return btView.implicitHeight;
+                    if (controlPanel.currentView === "power") return powerView.implicitHeight;
                     return mainView.implicitHeight;
                 }
 
@@ -372,7 +393,10 @@ PopupWindow {
 
                         MediaSection {}
                         InferhubSection {}
-                        SessionSection {}
+
+                        PowerRow {
+                            onOpenPower: controlPanel.navigateTo("power")
+                        }
                     }
                 }
 
@@ -521,6 +545,36 @@ PopupWindow {
                         id: btView
                         width: parent.width
                         visible: btWrapper.isActive
+                    }
+                }
+
+                // View 7: Power control
+                Item {
+                    id: powerWrapper
+                    width: parent.width
+                    height: powerView.implicitHeight
+                    property bool isActive: controlPanel.currentView === "power"
+                    visible: isActive || opacity > 0.001
+                    opacity: isActive ? 1.0 : 0.0
+                    x: isActive ? 0 : controlPanel.viewOffset
+
+                    Behavior on opacity {
+                        SequentialAnimation {
+                            PauseAnimation { duration: powerWrapper.isActive ? 50 : 0 }
+                            NumberAnimation {
+                                duration: powerWrapper.isActive ? Theme.animNormal : 100
+                                easing.type: Theme.easeEntrance
+                            }
+                        }
+                    }
+                    Behavior on x {
+                        NumberAnimation { duration: Theme.animView; easing.type: Theme.easeView }
+                    }
+
+                    PowerOptions {
+                        id: powerView
+                        width: parent.width
+                        onRequestClose: controlPanel.close()
                     }
                 }
             }
