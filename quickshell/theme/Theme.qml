@@ -15,6 +15,10 @@ QtObject {
     property color subtext1: "#bac2de"
     property color mauve: "#cba6f7" // Primary Accent (dynamic)
     readonly property color red: "#f38ba8" // Critical / Danger (fixed)
+    // Fixed accents for dark, low-chrome surfaces (lock screen, fullscreen
+    // overlays). These stay constant regardless of the dynamic palette.
+    readonly property color accentMauve: "#cba6f7"
+    readonly property color accentPink: "#f5c2e7"
     // Metrics & Styling (always static)
     readonly property int radiusSm: 6
     readonly property int radiusMd: 8
