@@ -33,7 +33,7 @@ hl.monitor({
 -- External monitor (AOC 24G4)
 hl.monitor({
     output   = "desc:AOC 24G4 12VQ6HA008756",
-    mode     = "1920x1080@60",
+    mode     = "1920x1080@180",
     position = "1280x0",
     scale    = 1,
 })
@@ -330,7 +330,7 @@ end
 
 -- Example special workspace (scratchpad)
 hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
--- hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + ALT + S", hl.dsp.window.move({ workspace = "special:magic" }))
 
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
