@@ -78,6 +78,21 @@ PanelWindow {
                 spacing: 8
                 Layout.alignment: Qt.AlignVCenter
 
+                CpuTempPill {
+                }
+
+                RamPill {
+                }
+
+                GpuPill {
+                }
+
+                BluetoothBatteryPill {
+                }
+
+                UsagePill {
+                }
+
                 Tray {
                 }
 
