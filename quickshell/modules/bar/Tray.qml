@@ -1,7 +1,7 @@
+import "../../components"
 import "../../components/tray"
 import "../../theme"
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
 import Quickshell
@@ -48,6 +48,12 @@ RowLayout {
                         root.activeMenu = null;
                     }
                 }
+            }
+
+            TooltipCard {
+                anchorItem: delegate
+                text: delegate.modelData.tooltipTitle || delegate.modelData.title || ""
+                shown: hoverArea.containsMouse && text !== ""
             }
 
             IconImage {
@@ -98,9 +104,6 @@ RowLayout {
 
                     modelData.scroll(wheel.angleDelta.y, false);
                 }
-                ToolTip.visible: hoverArea.containsMouse && (modelData.tooltipTitle || modelData.title) !== ""
-                ToolTip.text: modelData.tooltipTitle || modelData.title
-                ToolTip.delay: 400
             }
 
             Behavior on color {

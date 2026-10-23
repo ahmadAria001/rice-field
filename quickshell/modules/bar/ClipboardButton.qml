@@ -1,6 +1,6 @@
+import "../../components"
 import "../../theme"
 import QtQuick
-import QtQuick.Controls
 import Quickshell.Io
 
 Rectangle {
@@ -34,9 +34,12 @@ Rectangle {
         onClicked: {
             proc.exec(["qs", "ipc", "call", "clipboard", "toggle"]);
         }
-        ToolTip.visible: clipMouse.containsMouse
-        ToolTip.text: "Clipboard History"
-        ToolTip.delay: 300
+    }
+
+    TooltipCard {
+        anchorItem: root
+        shown: clipMouse.containsMouse
+        text: "Clipboard History"
     }
 
     Behavior on color {

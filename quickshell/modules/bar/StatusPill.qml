@@ -1,6 +1,6 @@
+import "../../components"
 import "../../theme"
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell.Io
 import Quickshell.Services.UPower
@@ -156,9 +156,12 @@ Rectangle {
         onClicked: {
             root.clicked();
         }
-        ToolTip.visible: pillMouse.containsMouse
-        ToolTip.text: "Quick Settings"
-        ToolTip.delay: 400
+    }
+
+    TooltipCard {
+        anchorItem: root
+        shown: pillMouse.containsMouse
+        text: "Quick Settings"
     }
 
     Behavior on color {
