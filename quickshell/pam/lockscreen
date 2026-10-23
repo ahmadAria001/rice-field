@@ -1,0 +1,33 @@
+#%PAM-1.0
+#
+# Lock screen authentication for "Sekai After Dark" (Quickshell).
+#
+# Installed to ~/.config/quickshell/pam/lockscreen and selected through PamContext's
+# configDirectory.
+#
+# IMPORTANT: modules are listed explicitly rather than through `include`. Quickshell
+# calls pam_start_confdir(), which resolves *every* config name inside the given
+# directory, so `include system-login` looks for <configDirectory>/system-login,
+# finds nothing, and contributes no modules at all. An auth stack with no modules
+# makes pam_authenticate() return PAM_PERM_DENIED, which Quickshell reports as
+# PamError (not as a wrong password), so every unlock fails even with a correct
+# password. Explicit modules avoid that entirely.
+#
+# The auth stack mirrors the auth section of /etc/pam.d/system-auth, so lockout
+# accounting through pam_faillock behaves the same as a normal login.
+#
+# Deliberately omitted from the login stack:
+#   pam_shells   - rejects users whose shell is not in /etc/shells; irrelevant to
+#                  unlocking a session the user is already running.
+#   pam_nologin  - blocks new logins during shutdown; a lock screen is not a login.
+
+auth       required                    pam_faillock.so      preauth
+auth       [success=1 default=bad]     pam_unix.so          try_first_pass nullok
+auth       [default=die]               pam_faillock.so      authfail
+auth       required                    pam_faillock.so      authsucc
+
+# Quickshell only calls pam_authenticate(), never pam_acct_mgmt(), so these account
+# lines are inert today. They are explicit (not `include`) so they stay correct if
+# account checking is ever added.
+account    required                    pam_unix.so
+account    required                    pam_faillock.so

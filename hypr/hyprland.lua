@@ -238,6 +238,23 @@ hl.config({
     misc = {
         force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
         disable_hyprland_logo   = false, -- If true disables the random hyprland logo / anime girl background. :(
+
+        -- Required by the Quickshell lock screen (modules/lock).
+        --
+        -- With this disabled, Hyprland denies a lock request while any lock is already
+        -- held: it sets the new lock inert and sends ext_session_lock_v1.finished
+        -- synchronously, then silently drops the client's already-batched
+        -- get_lock_surface calls without creating a server-side object for them
+        -- (SessionLock.cpp, the m_inert guard). The client's later
+        -- ext_session_lock_surface_v1.destroy() on those never-created objects is
+        -- answered with WL_DISPLAY_ERROR_INVALID_OBJECT, which libwayland treats as
+        -- fatal, so the whole shell client dies. A lock client that died while holding
+        -- the lock leaves one held, so every later attempt repeats this and the session
+        -- can never be locked again.
+        --
+        -- Enabling restore makes Hyprland grant the re-lock (locked, not finished), so
+        -- that path is never taken. See hyprwm/Hyprland#16385.
+        allow_session_lock_restore = true,
     },
 })
 
@@ -293,6 +310,8 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
+-- Lock the session with the Quickshell lock screen ("Sekai After Dark")
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("qs ipc call lockscreen lock"))
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
 -- Move focus with mainMod + arrow keys
