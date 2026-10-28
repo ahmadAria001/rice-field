@@ -71,6 +71,7 @@ hl.on("hyprland.start", function ()
   hl.exec_cmd("systemctl --user start hyprpolkitagent")
   hl.exec_cmd("gnome-keyring-daemon --start --components=secrets,ssh,pkcs11")
   hl.exec_cmd("qs")
+  hl.exec_cmd("hypridle") -- dim -> lock -> display off (see hypridle.conf)
   hl.exec_cmd(os.getenv("HOME") .. "/.config/quickshell/scripts/wallpaper.sh restore")
 
   -- hl.exec_cmd("nm-applet")
