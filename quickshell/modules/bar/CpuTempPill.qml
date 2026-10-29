@@ -24,6 +24,15 @@ Rectangle {
     property int cores: 0
     property bool hovered: false
 
+    // Ambient thermal state. The guard doing its job is a system condition, not a
+    // number you have to hover to discover, so ramping/floor tint the pill warm and
+    // pulse it once on entry.
+    readonly property bool guardActive: Thermal.ok && (Thermal.state === "ramping" || Thermal.state === "floor")
+    readonly property color guardColor: Thermal.state === "floor" ? Theme.red : "#f9e2af"
+    // Drives the one-shot pulse; scale is a transform, so it never disturbs the bar
+    // layout the way a width or margin animation would.
+    property real pulse: 0
+
     // Previous /proc/stat totals, for the utilisation delta.
     property real prevTotal: 0
     property real prevIdle: 0
@@ -84,8 +93,37 @@ Rectangle {
     implicitWidth: pillLayout.implicitWidth + 16
     radius: Theme.radiusSm
     color: pillMouse.containsMouse ? Theme.surface0 : Theme.mantle
-    border.color: pillMouse.containsMouse ? Theme.mauve : Theme.surface0
+    border.color: pillMouse.containsMouse ? Theme.mauve : (root.guardActive ? root.guardColor : Theme.surface0)
     border.width: Theme.borderWidth
+    scale: 1 + root.pulse
+    transformOrigin: Item.Center
+
+    onGuardActiveChanged: {
+        if (root.guardActive)
+            pulseAnim.restart();
+
+    }
+
+    SequentialAnimation {
+        id: pulseAnim
+
+        NumberAnimation {
+            target: root
+            property: "pulse"
+            to: 0.06
+            duration: Theme.animFast
+            easing.type: Theme.easeGeneral
+        }
+
+        NumberAnimation {
+            target: root
+            property: "pulse"
+            to: 0
+            duration: Theme.animSlow
+            easing.type: Theme.easeGeneral
+        }
+
+    }
 
     // One loop for both numbers, so the bar keeps a single sampler process instead of
     // a timer per metric.
@@ -129,7 +167,9 @@ Rectangle {
             text: "󰔏"
             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
             font.pixelSize: Theme.fontMd
-            color: Thermal.ok ? root.tempColor : Theme.subtext0
+            // The glyph carries the guard state; the number below carries the
+            // temperature, so the two signals stay separable.
+            color: !Thermal.ok ? Theme.subtext0 : (root.guardActive ? root.guardColor : root.tempColor)
         }
 
         Text {
@@ -199,7 +239,7 @@ Rectangle {
                         text: Thermal.ok ? Thermal.state : "no sensor"
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: root.guardActive ? root.guardColor : Theme.subtext0
                     }
 
                 }
