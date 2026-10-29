@@ -1,11 +1,17 @@
 {
-  "mantle": "#151413",
-  "base": "#201f1c",
-  "surface0": "#312f29",
-  "surface1": "#464238",
-  "text": "#e9e8e6",
-  "subtext0": "#bebbb5",
-  "subtext1": "#d3d1ce",
-  "mauve": "#e1c998",
-  "red": "#f38ba8"
+  "glass": "#0A0C12",
+  "bodyLow": "#14171F",
+  "bodyMid": "#1B1F29",
+  "bodyTop": "#262B37",
+  "rim": "#3A4152",
+  "edge": "#06070B",
+  "recess": "#10131A",
+  "ink": "#EEF2F8",
+  "inkDim": "#C3CBDA",
+  "inkFaint": "#8C97AB",
+  "ice": "#DCE8F6",
+  "accentCyan": "#78C8E0",
+  "accent": "#3A8FD4",
+  "accentDeep": "#246CB4",
+  "danger": "#D9667F"
 }

@@ -50,8 +50,10 @@ PopupWindow {
     Rectangle {
         id: cardBox
 
-        color: Theme.mantle
-        border.color: Theme.surface0
+        // bodyMid under rim: a raised surface catching light at its edge, the
+        // same pair the cards and pills use. See theme/Theme.qml.
+        color: Theme.bodyMid
+        border.color: Theme.rim
         border.width: Theme.borderWidth
         radius: Theme.radiusMd
         implicitWidth: Math.max(120, contentLayout.implicitWidth + 16)
@@ -59,6 +61,20 @@ PopupWindow {
         opacity: root.shown ? 1 : 0
         scale: root.shown ? 1 : Theme.scaleDown
         transformOrigin: Item.Top
+
+        // her hairline along the top edge, as on every other card
+        HairBar {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.leftMargin: parent.radius
+            anchors.rightMargin: parent.radius
+            anchors.topMargin: 1
+            height: 1
+            radius: 0
+            opacity: 0.22
+            fadeTo: "end"
+        }
 
         ColumnLayout {
             id: contentLayout
