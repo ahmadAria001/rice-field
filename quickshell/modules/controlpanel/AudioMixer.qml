@@ -59,7 +59,7 @@ ColumnLayout {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
                     font.bold: true
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                 }
 
                 Repeater {
@@ -74,8 +74,8 @@ ColumnLayout {
                         Layout.fillWidth: true
                         implicitHeight: 40
                         radius: Theme.radiusSm
-                        color: isDefault ? Theme.surface1 : (sinkMouse.containsMouse ? Theme.surface0 : "transparent")
-                        border.color: isDefault ? Theme.mauve : Theme.surface0
+                        color: isDefault ? Theme.bodyTop : (sinkMouse.containsMouse ? Theme.bodyMid : "transparent")
+                        border.color: isDefault ? Theme.accent : Theme.bodyMid
                         border.width: Theme.borderWidth
 
                         RowLayout {
@@ -88,7 +88,7 @@ ColumnLayout {
                                 text: sinkDelegate.isDefault ? "󰄵" : "󰄱"
                                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                 font.pixelSize: Theme.fontLg
-                                color: sinkDelegate.isDefault ? Theme.mauve : Theme.subtext0
+                                color: sinkDelegate.isDefault ? Theme.accent : Theme.inkFaint
                             }
 
                             Text {
@@ -96,7 +96,7 @@ ColumnLayout {
                                 font.family: "sans-serif"
                                 font.pixelSize: Theme.fontMd
                                 font.bold: sinkDelegate.isDefault
-                                color: Theme.text
+                                color: Theme.ink
                                 elide: Text.ElideRight
                                 Layout.fillWidth: true
                             }
@@ -138,7 +138,7 @@ ColumnLayout {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
                     font.bold: true
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                 }
 
                 Text {
@@ -146,7 +146,7 @@ ColumnLayout {
                     text: "No active audio streams"
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                     Layout.alignment: Qt.AlignHCenter
                     Layout.topMargin: 8
                     Layout.bottomMargin: 8
@@ -166,8 +166,8 @@ ColumnLayout {
                         Layout.fillWidth: true
                         implicitHeight: 64
                         radius: Theme.radiusSm
-                        color: Theme.surface0
-                        border.color: Theme.surface1
+                        color: Theme.bodyMid
+                        border.color: Theme.bodyTop
                         border.width: Theme.borderWidth
 
                         ColumnLayout {
@@ -182,7 +182,7 @@ ColumnLayout {
                                     text: "󰎆"
                                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                     font.pixelSize: Theme.fontMd
-                                    color: Theme.mauve
+                                    color: Theme.accent
                                 }
 
                                 Text {
@@ -190,7 +190,7 @@ ColumnLayout {
                                     font.family: "sans-serif"
                                     font.pixelSize: Theme.fontSm
                                     font.bold: true
-                                    color: Theme.text
+                                    color: Theme.ink
                                     elide: Text.ElideRight
                                     Layout.fillWidth: true
                                 }
@@ -199,7 +199,7 @@ ColumnLayout {
                                     text: Math.round(streamDelegate.volume * 100) + "%"
                                     font.family: "sans-serif"
                                     font.pixelSize: Theme.fontSm
-                                    color: Theme.subtext0
+                                    color: Theme.inkFaint
                                 }
 
                                 // Stream Mute Button
@@ -207,14 +207,14 @@ ColumnLayout {
                                     implicitWidth: 22
                                     implicitHeight: 22
                                     radius: 4
-                                    color: streamMuteMouse.containsMouse ? Theme.surface1 : "transparent"
+                                    color: streamMuteMouse.containsMouse ? Theme.bodyTop : "transparent"
 
                                     Text {
                                         anchors.centerIn: parent
                                         text: streamDelegate.isMuted ? "󰝟" : "󰕾"
                                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                         font.pixelSize: Theme.fontSm
-                                        color: streamDelegate.isMuted ? Theme.red : Theme.text
+                                        color: streamDelegate.isMuted ? Theme.danger : Theme.ink
                                     }
 
                                     MouseArea {
@@ -261,12 +261,12 @@ ColumnLayout {
                                     width: streamSlider.availableWidth
                                     height: implicitHeight
                                     radius: 4
-                                    color: Theme.surface1
+                                    color: Theme.bodyTop
 
                                     Rectangle {
                                         width: streamSlider.visualPosition * parent.width
                                         height: parent.height
-                                        color: streamDelegate.isMuted ? Theme.subtext0 : Theme.mauve
+                                        color: streamDelegate.isMuted ? Theme.inkFaint : Theme.accent
                                         radius: 4
                                     }
 
@@ -278,7 +278,7 @@ ColumnLayout {
                                     implicitWidth: 14
                                     implicitHeight: 14
                                     radius: 7
-                                    color: Theme.text
+                                    color: Theme.ink
                                 }
 
                             }

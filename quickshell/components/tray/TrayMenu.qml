@@ -67,8 +67,8 @@ PopupWindow {
     Rectangle {
         id: menuBox
 
-        color: Theme.mantle
-        border.color: Theme.surface0
+        color: Theme.bodyLow
+        border.color: Theme.bodyMid
         border.width: Theme.borderWidth
         radius: Theme.radiusSm
         implicitWidth: Math.max(180, menuColumn.implicitWidth + 16)
@@ -93,7 +93,7 @@ PopupWindow {
                     Layout.fillWidth: true
                     implicitHeight: modelData.isSeparator ? 1 : 28
                     radius: Theme.radiusSm
-                    color: modelData.isSeparator ? Theme.surface0 : (itemHover.containsMouse && modelData.enabled ? Theme.surface0 : "transparent")
+                    color: modelData.isSeparator ? Theme.bodyMid : (itemHover.containsMouse && modelData.enabled ? Theme.bodyMid : "transparent")
 
                     // Non-clickable separator spacer
                     Item {
@@ -117,7 +117,7 @@ PopupWindow {
                             text: entryRow.modelData.checkState === Qt.Checked ? "󰄵" : "󰄱"
                             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                             font.pixelSize: Theme.fontSm
-                            color: entryRow.modelData.checkState === Qt.Checked ? Theme.mauve : Theme.subtext0
+                            color: entryRow.modelData.checkState === Qt.Checked ? Theme.accent : Theme.inkFaint
                         }
 
                         IconImage {
@@ -130,7 +130,7 @@ PopupWindow {
                         Text {
                             // Strip mnemonic accelerator ampersands (e.g. "&Quit" -> "Quit")
                             text: entryRow.modelData.text ? entryRow.modelData.text.replace(/&/g, "") : ""
-                            color: entryRow.modelData.enabled ? Theme.text : Theme.subtext0
+                            color: entryRow.modelData.enabled ? Theme.ink : Theme.inkFaint
                             font.family: "sans-serif"
                             font.pixelSize: Theme.fontSm
                             elide: Text.ElideRight
@@ -140,7 +140,7 @@ PopupWindow {
                         Text {
                             visible: entryRow.modelData.hasChildren
                             text: "›"
-                            color: Theme.subtext0
+                            color: Theme.inkFaint
                             font.pixelSize: Theme.fontMd
                         }
 

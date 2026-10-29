@@ -27,7 +27,7 @@ Item {
         width: clockText.implicitWidth + 20
         height: 26
         radius: Theme.radiusSm
-        color: Theme.surface0
+        color: Theme.bodyMid
         opacity: (clockHit.containsMouse || panel.shown) ? 0.55 : 0
 
         Behavior on opacity {
@@ -48,7 +48,7 @@ Item {
         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
         font.pixelSize: Theme.fontLg
         font.bold: true
-        color: Theme.text
+        color: Theme.ink
     }
 
     MouseArea {

@@ -15,8 +15,8 @@ Rectangle {
     Layout.fillWidth: true
     implicitHeight: 74
     radius: Theme.radiusSm
-    color: Theme.surface0
-    border.color: Theme.surface1
+    color: Theme.bodyMid
+    border.color: Theme.bodyTop
     border.width: Theme.borderWidth
 
     RowLayout {
@@ -29,7 +29,7 @@ Rectangle {
             implicitWidth: 54
             implicitHeight: 54
             radius: Theme.radiusSm
-            color: Theme.surface1
+            color: Theme.bodyTop
             clip: true
 
             IconImage {
@@ -43,7 +43,7 @@ Rectangle {
                 text: "󰎆"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontXl
-                color: Theme.subtext0
+                color: Theme.inkFaint
                 visible: !root.player || !root.player.trackArtUrl
             }
 
@@ -59,7 +59,7 @@ Rectangle {
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontMd
                 font.bold: true
-                color: Theme.text
+                color: Theme.ink
                 elide: Text.ElideRight
                 Layout.fillWidth: true
             }
@@ -68,7 +68,7 @@ Rectangle {
                 text: root.player && root.player.trackArtist ? root.player.trackArtist : (root.player && root.player.identity ? root.player.identity : "Media Player")
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontSm
-                color: Theme.subtext0
+                color: Theme.inkFaint
                 elide: Text.ElideRight
                 Layout.fillWidth: true
             }
@@ -84,14 +84,14 @@ Rectangle {
                 implicitWidth: 32
                 implicitHeight: 32
                 radius: 16
-                color: prevMouse.containsMouse ? Theme.surface1 : "transparent"
+                color: prevMouse.containsMouse ? Theme.bodyTop : "transparent"
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰒮"
                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontLg
-                    color: root.player && root.player.canGoPrevious ? Theme.text : Theme.surface1
+                    color: root.player && root.player.canGoPrevious ? Theme.ink : Theme.bodyTop
                 }
 
                 MouseArea {
@@ -114,14 +114,14 @@ Rectangle {
                 implicitWidth: 36
                 implicitHeight: 36
                 radius: 18
-                color: playMouse.containsMouse ? Theme.mauve : Theme.surface1
+                color: playMouse.containsMouse ? Theme.accent : Theme.bodyTop
 
                 Text {
                     anchors.centerIn: parent
                     text: root.player && root.player.isPlaying ? "󰏤" : "󰐊"
                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontLg
-                    color: playMouse.containsMouse ? Theme.mantle : Theme.text
+                    color: playMouse.containsMouse ? Theme.bodyLow : Theme.ink
                 }
 
                 MouseArea {
@@ -144,14 +144,14 @@ Rectangle {
                 implicitWidth: 32
                 implicitHeight: 32
                 radius: 16
-                color: nextMouse.containsMouse ? Theme.surface1 : "transparent"
+                color: nextMouse.containsMouse ? Theme.bodyTop : "transparent"
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰒭"
                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontLg
-                    color: root.player && root.player.canGoNext ? Theme.text : Theme.surface1
+                    color: root.player && root.player.canGoNext ? Theme.ink : Theme.bodyTop
                 }
 
                 MouseArea {

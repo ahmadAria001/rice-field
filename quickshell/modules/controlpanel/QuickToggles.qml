@@ -113,7 +113,7 @@ GridLayout {
         Layout.fillWidth: true
         implicitHeight: 46
         radius: Theme.radiusSm
-        color: root.wifiEnabled ? Theme.mauve : (wifiMouse.containsMouse ? Theme.surface1 : Theme.surface0)
+        color: root.wifiEnabled ? Theme.accent : (wifiMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid)
 
         RowLayout {
             anchors.fill: parent
@@ -134,7 +134,7 @@ GridLayout {
                         text: root.wifiEnabled ? "󰤨" : "󰤮"
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontXl
-                        color: root.wifiEnabled ? Theme.mantle : Theme.text
+                        color: root.wifiEnabled ? Theme.bodyLow : Theme.ink
                     }
 
                     ColumnLayout {
@@ -146,14 +146,14 @@ GridLayout {
                             font.family: "sans-serif"
                             font.pixelSize: Theme.fontMd
                             font.bold: true
-                            color: root.wifiEnabled ? Theme.mantle : Theme.text
+                            color: root.wifiEnabled ? Theme.bodyLow : Theme.ink
                         }
 
                         Text {
                             text: root.wifiSsid
                             font.family: "sans-serif"
                             font.pixelSize: Theme.fontSm
-                            color: root.wifiEnabled ? "#313244" : Theme.subtext0
+                            color: root.wifiEnabled ? "#313244" : Theme.inkFaint
                             elide: Text.ElideRight
                             Layout.fillWidth: true
                         }
@@ -179,14 +179,14 @@ GridLayout {
                 implicitWidth: 26
                 implicitHeight: 26
                 radius: Theme.radiusSm
-                color: wifiDrillMouse.containsMouse ? (root.wifiEnabled ? "#33000000" : Theme.surface1) : "transparent"
+                color: wifiDrillMouse.containsMouse ? (root.wifiEnabled ? "#33000000" : Theme.bodyTop) : "transparent"
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰅂"
                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontMd
-                    color: root.wifiEnabled ? Theme.mantle : Theme.subtext0
+                    color: root.wifiEnabled ? Theme.bodyLow : Theme.inkFaint
                 }
 
                 MouseArea {
@@ -211,7 +211,7 @@ GridLayout {
         Layout.fillWidth: true
         implicitHeight: 46
         radius: Theme.radiusSm
-        color: root.btEnabled ? Theme.mauve : (btMouse.containsMouse ? Theme.surface1 : Theme.surface0)
+        color: root.btEnabled ? Theme.accent : (btMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid)
 
         RowLayout {
             anchors.fill: parent
@@ -232,7 +232,7 @@ GridLayout {
                         text: root.btEnabled ? "󰂯" : "󰂲"
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontXl
-                        color: root.btEnabled ? Theme.mantle : Theme.text
+                        color: root.btEnabled ? Theme.bodyLow : Theme.ink
                     }
 
                     ColumnLayout {
@@ -244,14 +244,14 @@ GridLayout {
                             font.family: "sans-serif"
                             font.pixelSize: Theme.fontMd
                             font.bold: true
-                            color: root.btEnabled ? Theme.mantle : Theme.text
+                            color: root.btEnabled ? Theme.bodyLow : Theme.ink
                         }
 
                         Text {
                             text: root.btDevice
                             font.family: "sans-serif"
                             font.pixelSize: Theme.fontSm
-                            color: root.btEnabled ? "#313244" : Theme.subtext0
+                            color: root.btEnabled ? "#313244" : Theme.inkFaint
                             elide: Text.ElideRight
                             Layout.fillWidth: true
                         }
@@ -277,14 +277,14 @@ GridLayout {
                 implicitWidth: 26
                 implicitHeight: 26
                 radius: Theme.radiusSm
-                color: btDrillMouse.containsMouse ? (root.btEnabled ? "#33000000" : Theme.surface1) : "transparent"
+                color: btDrillMouse.containsMouse ? (root.btEnabled ? "#33000000" : Theme.bodyTop) : "transparent"
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰅂"
                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontMd
-                    color: root.btEnabled ? Theme.mantle : Theme.subtext0
+                    color: root.btEnabled ? Theme.bodyLow : Theme.inkFaint
                 }
 
                 MouseArea {
@@ -309,7 +309,7 @@ GridLayout {
         Layout.fillWidth: true
         implicitHeight: 46
         radius: Theme.radiusSm
-        color: root.nightLightEnabled ? Theme.mauve : (nlMouse.containsMouse ? Theme.surface1 : Theme.surface0)
+        color: root.nightLightEnabled ? Theme.accent : (nlMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid)
 
         RowLayout {
             anchors.fill: parent
@@ -321,7 +321,7 @@ GridLayout {
                 text: "󰖔"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontXl
-                color: root.nightLightEnabled ? Theme.mantle : Theme.text
+                color: root.nightLightEnabled ? Theme.bodyLow : Theme.ink
             }
 
             ColumnLayout {
@@ -333,14 +333,14 @@ GridLayout {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontMd
                     font.bold: true
-                    color: root.nightLightEnabled ? Theme.mantle : Theme.text
+                    color: root.nightLightEnabled ? Theme.bodyLow : Theme.ink
                 }
 
                 Text {
                     text: root.nightLightEnabled ? "Warm" : "Off"
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
-                    color: root.nightLightEnabled ? "#313244" : Theme.subtext0
+                    color: root.nightLightEnabled ? "#313244" : Theme.inkFaint
                 }
 
             }
@@ -376,7 +376,7 @@ GridLayout {
         Layout.fillWidth: true
         implicitHeight: 46
         radius: Theme.radiusSm
-        color: root.caffeineEnabled ? Theme.mauve : (caffMouse.containsMouse ? Theme.surface1 : Theme.surface0)
+        color: root.caffeineEnabled ? Theme.accent : (caffMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid)
 
         RowLayout {
             anchors.fill: parent
@@ -388,7 +388,7 @@ GridLayout {
                 text: "󰅶"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontXl
-                color: root.caffeineEnabled ? Theme.mantle : Theme.text
+                color: root.caffeineEnabled ? Theme.bodyLow : Theme.ink
             }
 
             ColumnLayout {
@@ -400,14 +400,14 @@ GridLayout {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontMd
                     font.bold: true
-                    color: root.caffeineEnabled ? Theme.mantle : Theme.text
+                    color: root.caffeineEnabled ? Theme.bodyLow : Theme.ink
                 }
 
                 Text {
                     text: root.caffeineEnabled ? "Awake" : "Off"
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
-                    color: root.caffeineEnabled ? "#313244" : Theme.subtext0
+                    color: root.caffeineEnabled ? "#313244" : Theme.inkFaint
                 }
 
             }
@@ -439,7 +439,7 @@ GridLayout {
         Layout.fillWidth: true
         implicitHeight: 46
         radius: Theme.radiusSm
-        color: Theme.dndEnabled ? Theme.mauve : (dndMouse.containsMouse ? Theme.surface1 : Theme.surface0)
+        color: Theme.dndEnabled ? Theme.accent : (dndMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid)
 
         RowLayout {
             anchors.fill: parent
@@ -451,7 +451,7 @@ GridLayout {
                 text: Theme.dndEnabled ? "󰂛" : "󰂚"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontXl
-                color: Theme.dndEnabled ? Theme.mantle : Theme.text
+                color: Theme.dndEnabled ? Theme.bodyLow : Theme.ink
             }
 
             ColumnLayout {
@@ -463,7 +463,7 @@ GridLayout {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontMd
                     font.bold: true
-                    color: Theme.dndEnabled ? Theme.mantle : Theme.text
+                    color: Theme.dndEnabled ? Theme.bodyLow : Theme.ink
                     elide: Text.ElideRight
                     Layout.fillWidth: true
                 }
@@ -472,7 +472,7 @@ GridLayout {
                     text: Theme.dndEnabled ? "Silenced" : "Normal"
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
-                    color: Theme.dndEnabled ? "#313244" : Theme.subtext0
+                    color: Theme.dndEnabled ? "#313244" : Theme.inkFaint
                     elide: Text.ElideRight
                     Layout.fillWidth: true
                 }
@@ -506,7 +506,7 @@ GridLayout {
         Layout.fillWidth: true
         implicitHeight: 46
         radius: Theme.radiusSm
-        color: screenshotMouse.containsMouse ? Theme.surface1 : Theme.surface0
+        color: screenshotMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid
 
         RowLayout {
             anchors.fill: parent
@@ -518,7 +518,7 @@ GridLayout {
                 text: "󰄀"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontXl
-                color: Theme.mauve
+                color: Theme.accent
             }
 
             ColumnLayout {
@@ -530,7 +530,7 @@ GridLayout {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontMd
                     font.bold: true
-                    color: Theme.text
+                    color: Theme.ink
                     elide: Text.ElideRight
                     Layout.fillWidth: true
                 }
@@ -539,7 +539,7 @@ GridLayout {
                     text: "Capture area"
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                     elide: Text.ElideRight
                     Layout.fillWidth: true
                 }
@@ -578,7 +578,7 @@ GridLayout {
         Layout.columnSpan: 2
         implicitHeight: 46
         radius: Theme.radiusSm
-        color: wpMouse.containsMouse ? Theme.surface1 : Theme.surface0
+        color: wpMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid
 
         RowLayout {
             anchors.fill: parent
@@ -590,7 +590,7 @@ GridLayout {
                 text: "󰸉"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontXl
-                color: Theme.mauve
+                color: Theme.accent
             }
 
             ColumnLayout {
@@ -602,14 +602,14 @@ GridLayout {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontMd
                     font.bold: true
-                    color: Theme.text
+                    color: Theme.ink
                 }
 
                 Text {
                     text: "Select desktop background"
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                     elide: Text.ElideRight
                     Layout.fillWidth: true
                 }
@@ -620,7 +620,7 @@ GridLayout {
                 text: "󰅂"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontMd
-                color: Theme.subtext0
+                color: Theme.inkFaint
             }
 
         }

@@ -116,7 +116,7 @@ PopupWindow {
             text: root.text
             font.family: "sans-serif"
             font.pixelSize: Theme.fontSm
-            color: Theme.text
+            color: Theme.ink
         }
 
     }

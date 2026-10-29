@@ -28,7 +28,7 @@ Rectangle {
     // number you have to hover to discover, so ramping/floor tint the pill warm and
     // pulse it once on entry.
     readonly property bool guardActive: Thermal.ok && (Thermal.state === "ramping" || Thermal.state === "floor")
-    readonly property color guardColor: Thermal.state === "floor" ? Theme.red : "#f9e2af"
+    readonly property color guardColor: Thermal.state === "floor" ? Theme.danger : "#f9e2af"
     // Drives the one-shot pulse; scale is a transform, so it never disturbs the bar
     // layout the way a width or margin animation would.
     property real pulse: 0
@@ -37,22 +37,22 @@ Rectangle {
     property real prevTotal: 0
     property real prevIdle: 0
 
-    // Comfortable, warm, and at the guard's target. Theme.red is the palette's fixed
+    // Comfortable, warm, and at the guard's target. Theme.danger is the palette's fixed
     // danger colour; the warm step has no token, so it uses the Catppuccin yellow the
     // rice already hard-codes elsewhere.
     readonly property real warnAt: 75
     readonly property real hotAt: 85
     readonly property color tempColor: {
         if (!Thermal.ok)
-            return Theme.subtext0;
+            return Theme.inkFaint;
 
         if (Thermal.tctl >= root.hotAt)
-            return Theme.red;
+            return Theme.danger;
 
         if (Thermal.tctl >= root.warnAt)
             return "#f9e2af";
 
-        return Theme.text;
+        return Theme.ink;
     }
 
     function ingest(line) {
@@ -92,8 +92,8 @@ Rectangle {
     implicitHeight: 28
     implicitWidth: pillLayout.implicitWidth + 16
     radius: Theme.radiusSm
-    color: pillMouse.containsMouse ? Theme.surface0 : Theme.mantle
-    border.color: pillMouse.containsMouse ? Theme.mauve : (root.guardActive ? root.guardColor : Theme.surface0)
+    color: pillMouse.containsMouse ? Theme.bodyMid : Theme.bodyLow
+    border.color: pillMouse.containsMouse ? Theme.accent : (root.guardActive ? root.guardColor : Theme.bodyMid)
     border.width: Theme.borderWidth
     scale: 1 + root.pulse
     transformOrigin: Item.Center
@@ -169,14 +169,14 @@ Rectangle {
             font.pixelSize: Theme.fontMd
             // The glyph carries the guard state; the number below carries the
             // temperature, so the two signals stay separable.
-            color: !Thermal.ok ? Theme.subtext0 : (root.guardActive ? root.guardColor : root.tempColor)
+            color: !Thermal.ok ? Theme.inkFaint : (root.guardActive ? root.guardColor : root.tempColor)
         }
 
         Text {
             text: Thermal.ok ? Math.round(Thermal.tctl) + "°C" : "—"
             font.family: "JetBrainsMono Nerd Font, sans-serif"
             font.pixelSize: Theme.fontSm
-            color: Thermal.ok ? root.tempColor : Theme.subtext0
+            color: Thermal.ok ? root.tempColor : Theme.inkFaint
         }
 
     }
@@ -223,7 +223,7 @@ Rectangle {
                         text: "󰔏"
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Thermal.ok ? root.tempColor : Theme.subtext0
+                        color: Thermal.ok ? root.tempColor : Theme.inkFaint
                     }
 
                     Text {
@@ -232,14 +232,14 @@ Rectangle {
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
                         font.bold: true
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                     Text {
                         text: Thermal.ok ? Thermal.state : "no sensor"
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: root.guardActive ? root.guardColor : Theme.subtext0
+                        color: root.guardActive ? root.guardColor : Theme.inkFaint
                     }
 
                 }
@@ -249,13 +249,13 @@ Rectangle {
                     Layout.fillWidth: true
                     implicitHeight: 4
                     radius: 2
-                    color: Theme.surface0
+                    color: Theme.bodyMid
 
                     Rectangle {
                         width: parent.width * Math.max(0, Math.min(1, root.load))
                         height: parent.height
                         radius: parent.radius
-                        color: Theme.mauve
+                        color: Theme.accent
                     }
 
                 }
@@ -270,7 +270,7 @@ Rectangle {
                         text: "Load"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -279,14 +279,14 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                     Text {
                         text: "Average"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -295,14 +295,14 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                     Text {
                         text: "Cores"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -311,14 +311,14 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                     Text {
                         text: "Temp"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -327,14 +327,14 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Thermal.ok ? root.tempColor : Theme.subtext0
+                        color: Thermal.ok ? root.tempColor : Theme.inkFaint
                     }
 
                     Text {
                         text: "Guard"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -344,14 +344,14 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                     Text {
                         text: "Ceiling"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -362,7 +362,7 @@ Rectangle {
                         font.pixelSize: Theme.fontSm
                         // A reduced ceiling is the guard doing its job, so it is worth
                         // seeing at a glance.
-                        color: Thermal.throttled ? Theme.red : Theme.text
+                        color: Thermal.throttled ? Theme.danger : Theme.ink
                     }
 
                 }

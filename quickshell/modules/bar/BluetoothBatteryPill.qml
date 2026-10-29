@@ -47,15 +47,15 @@ Rectangle {
     readonly property real hotAt: 10
     readonly property color batteryColor: {
         if (root.lowest === null)
-            return Theme.subtext0;
+            return Theme.inkFaint;
 
         if (root.lowest.percent <= root.hotAt)
-            return Theme.red;
+            return Theme.danger;
 
         if (root.lowest.percent <= root.warnAt)
             return "#f9e2af";
 
-        return Theme.text;
+        return Theme.ink;
     }
 
     function parse(text) {
@@ -79,8 +79,8 @@ Rectangle {
     implicitHeight: 28
     implicitWidth: pillLayout.implicitWidth + 16
     radius: Theme.radiusSm
-    color: pillMouse.containsMouse ? Theme.surface0 : Theme.mantle
-    border.color: pillMouse.containsMouse ? Theme.mauve : Theme.surface0
+    color: pillMouse.containsMouse ? Theme.bodyMid : Theme.bodyLow
+    border.color: pillMouse.containsMouse ? Theme.accent : Theme.bodyMid
     border.width: Theme.borderWidth
 
     // Polled every 10 s: earbud batteries move on a scale of minutes, and a D-Bus
@@ -160,7 +160,7 @@ Rectangle {
                         text: "󰂯"
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -169,14 +169,14 @@ Rectangle {
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
                         font.bold: true
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                     Text {
                         text: root.devices.length
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                 }
@@ -198,7 +198,7 @@ Rectangle {
                                 text: "󱡏"
                                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                 font.pixelSize: Theme.fontSm
-                                color: modelData.percent <= root.warnAt ? root.batteryColor : Theme.subtext0
+                                color: modelData.percent <= root.warnAt ? root.batteryColor : Theme.inkFaint
                             }
 
                             Text {
@@ -207,14 +207,14 @@ Rectangle {
                                 elide: Text.ElideRight
                                 font.family: "sans-serif"
                                 font.pixelSize: Theme.fontSm
-                                color: Theme.text
+                                color: Theme.ink
                             }
 
                             Text {
                                 text: Math.round(modelData.percent) + "%"
                                 font.family: "JetBrainsMono Nerd Font, sans-serif"
                                 font.pixelSize: Theme.fontSm
-                                color: modelData.percent <= root.warnAt ? root.batteryColor : Theme.text
+                                color: modelData.percent <= root.warnAt ? root.batteryColor : Theme.ink
                             }
 
                         }
@@ -224,13 +224,13 @@ Rectangle {
                             Layout.fillWidth: true
                             implicitHeight: 3
                             radius: 1.5
-                            color: Theme.surface0
+                            color: Theme.bodyMid
 
                             Rectangle {
                                 width: parent.width * Math.max(0, Math.min(1, modelData.percent / 100))
                                 height: parent.height
                                 radius: parent.radius
-                                color: modelData.percent <= root.hotAt ? Theme.red : (modelData.percent <= root.warnAt ? "#f9e2af" : Theme.mauve)
+                                color: modelData.percent <= root.hotAt ? Theme.danger : (modelData.percent <= root.warnAt ? "#f9e2af" : Theme.accent)
                             }
 
                         }

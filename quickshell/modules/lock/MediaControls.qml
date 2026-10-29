@@ -46,7 +46,7 @@ GlassCard {
                 text: "󰎆"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontXl
-                color: Theme.subtext0
+                color: Theme.inkFaint
             }
 
         }
@@ -61,7 +61,7 @@ GlassCard {
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontMd
                 font.bold: true
-                color: Theme.text
+                color: Theme.ink
                 elide: Text.ElideRight
             }
 
@@ -80,7 +80,7 @@ GlassCard {
                 }
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontSm
-                color: Theme.subtext0
+                color: Theme.inkFaint
                 elide: Text.ElideRight
             }
 
@@ -113,7 +113,7 @@ GlassCard {
 
                 required property string glyph
                 required property bool enabledAction
-                property color tint: Theme.text
+                property color tint: Theme.ink
 
                 signal triggered()
 

@@ -22,8 +22,8 @@ Rectangle {
     implicitHeight: 28
     implicitWidth: pillLayout.implicitWidth + 16
     radius: Theme.radiusSm
-    color: pillMouse.containsMouse ? Theme.surface0 : Theme.mantle
-    border.color: pillMouse.containsMouse ? Theme.mauve : Theme.surface0
+    color: pillMouse.containsMouse ? Theme.bodyMid : Theme.bodyLow
+    border.color: pillMouse.containsMouse ? Theme.accent : Theme.bodyMid
     border.width: Theme.borderWidth
     Component.onCompleted: {
         refreshStatus();
@@ -82,7 +82,7 @@ Rectangle {
             text: root.netIcon
             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
             font.pixelSize: Theme.fontMd
-            color: Theme.text
+            color: Theme.ink
         }
 
         // Volume Icon
@@ -90,7 +90,7 @@ Rectangle {
             text: root.isMuted ? "󰝟" : (root.volumeLevel < 33 ? "󰕿" : (root.volumeLevel < 66 ? "󰖀" : "󰕾"))
             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
             font.pixelSize: Theme.fontMd
-            color: root.isMuted ? Theme.red : Theme.text
+            color: root.isMuted ? Theme.danger : Theme.ink
         }
 
         // Battery Icon & Percent (if present)
@@ -133,14 +133,14 @@ Rectangle {
                 }
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontMd
-                color: (UPower.displayDevice && UPower.displayDevice.percentage < 0.2) ? Theme.red : Theme.text
+                color: (UPower.displayDevice && UPower.displayDevice.percentage < 0.2) ? Theme.danger : Theme.ink
             }
 
             Text {
                 text: (UPower.displayDevice ? Math.round(UPower.displayDevice.percentage * 100) : 0) + "%"
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontSm
-                color: Theme.text
+                color: Theme.ink
             }
 
         }

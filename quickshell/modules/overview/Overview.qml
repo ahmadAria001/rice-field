@@ -201,7 +201,7 @@ PanelWindow {
 
                 Text {
                     text: "Workspaces"
-                    color: Theme.text
+                    color: Theme.ink
                     font.family: "Inter"
                     font.pixelSize: Theme.fontXl
                     font.bold: true
@@ -213,7 +213,7 @@ PanelWindow {
 
                 Text {
                     text: "1-5 to switch  ·  Esc to close"
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                     font.family: "Inter"
                     font.pixelSize: Theme.fontSm
                 }

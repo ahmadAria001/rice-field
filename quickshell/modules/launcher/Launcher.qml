@@ -148,9 +148,9 @@ PanelWindow {
 
                 Layout.fillWidth: true
                 placeholderText: "Search applications..."
-                placeholderTextColor: Theme.subtext0
+                placeholderTextColor: Theme.inkFaint
                 font.pixelSize: Theme.fontXl
-                color: Theme.text
+                color: Theme.ink
                 focus: true
                 Keys.onPressed: (event) => {
                     if (event.key === Qt.Key_Escape) {
@@ -171,9 +171,9 @@ PanelWindow {
                 }
 
                 background: Rectangle {
-                    color: Theme.surface0
+                    color: Theme.bodyMid
                     radius: Theme.radiusSm
-                    border.color: searchField.activeFocus ? Theme.mauve : Theme.surface1
+                    border.color: searchField.activeFocus ? Theme.accent : Theme.bodyTop
                     border.width: Theme.borderWidth
                 }
 

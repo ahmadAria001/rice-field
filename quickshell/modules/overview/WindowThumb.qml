@@ -38,9 +38,9 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: 4
-        color: Theme.base
+        color: Theme.glass
         border.width: root.selected ? 2 : 1
-        border.color: root.selected ? Theme.accentMauve : Theme.surface0
+        border.color: root.selected ? Theme.accent : Theme.bodyMid
         clip: true
 
         Behavior on border.color {
@@ -76,7 +76,7 @@ Item {
             text: "󰖯"
             font.family: "MesloLGS Nerd Font"
             font.pixelSize: Math.min(18, root.height * 0.35)
-            color: Theme.surface1
+            color: Theme.bodyTop
         }
 
         Rectangle {
@@ -111,7 +111,7 @@ Item {
             // Below this width the label is unreadable and just muddies the tile.
             visible: root.width > 88 && root.height > 30
             text: root.windowTitle
-            color: Theme.subtext1
+            color: Theme.inkDim
             font.family: "Inter"
             font.pixelSize: 9
             elide: Text.ElideRight

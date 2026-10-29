@@ -62,8 +62,8 @@ PanelWindow {
         id: container
 
         anchors.fill: parent
-        color: Theme.base
-        border.color: Theme.surface0
+        color: Theme.glass
+        border.color: Theme.bodyMid
         border.width: Theme.borderWidth
         radius: Theme.radiusLg
 

@@ -19,8 +19,8 @@ RowLayout {
             implicitWidth: isActive ? 28 : 24
             implicitHeight: 24
             radius: Theme.radiusSm
-            color: isActive ? Theme.mauve : (wsMouse.containsMouse ? Theme.surface0 : "transparent")
-            border.color: isActive ? Theme.mauve : (wsMouse.containsMouse ? Theme.surface1 : "transparent")
+            color: isActive ? Theme.accent : (wsMouse.containsMouse ? Theme.bodyMid : "transparent")
+            border.color: isActive ? Theme.accent : (wsMouse.containsMouse ? Theme.bodyTop : "transparent")
             border.width: Theme.borderWidth
 
             Text {
@@ -28,7 +28,7 @@ RowLayout {
                 text: wsId.toString()
                 font.pixelSize: Theme.fontMd
                 font.bold: isActive
-                color: isActive ? "#11111b" : (wsMouse.containsMouse ? Theme.text : Theme.subtext0)
+                color: isActive ? "#11111b" : (wsMouse.containsMouse ? Theme.ink : Theme.inkFaint)
             }
 
             MouseArea {

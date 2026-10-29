@@ -85,7 +85,7 @@ ColumnLayout {
             text: root.isConnecting ? "Connecting / Disconnecting..." : (root.devices.length + " paired / known devices")
             font.family: "JetBrainsMono Nerd Font, sans-serif"
             font.pixelSize: Theme.fontSm
-            color: root.isConnecting ? Theme.mauve : Theme.subtext0
+            color: root.isConnecting ? Theme.accent : Theme.inkFaint
             Layout.fillWidth: true
             elide: Text.ElideRight
         }
@@ -95,7 +95,7 @@ ColumnLayout {
             implicitWidth: 28
             implicitHeight: 28
             radius: Theme.radiusSm
-            color: rescanMouse.containsMouse && !root.isConnecting ? Theme.surface1 : Theme.surface0
+            color: rescanMouse.containsMouse && !root.isConnecting ? Theme.bodyTop : Theme.bodyMid
             opacity: (root.isScanning || root.isConnecting) ? 0.5 : 1.0
 
             Text {
@@ -103,7 +103,7 @@ ColumnLayout {
                 text: "󰑐"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontMd
-                color: Theme.text
+                color: Theme.ink
                 rotation: root.isScanning ? 360 : 0
                 Behavior on rotation {
                     NumberAnimation { duration: 800; loops: Animation.Infinite }
@@ -145,8 +145,8 @@ ColumnLayout {
                     Layout.fillWidth: true
                     implicitHeight: 44
                     radius: Theme.radiusSm
-                    color: modelData.connected ? Theme.surface1 : (devMouse.containsMouse && !root.isConnecting ? Theme.surface0 : "transparent")
-                    border.color: modelData.connected ? Theme.mauve : "transparent"
+                    color: modelData.connected ? Theme.bodyTop : (devMouse.containsMouse && !root.isConnecting ? Theme.bodyMid : "transparent")
+                    border.color: modelData.connected ? Theme.accent : "transparent"
                     border.width: modelData.connected ? 1 : 0
                     opacity: (root.isConnecting && root.connectingMac !== modelData.mac) ? 0.45 : 1.0
 
@@ -167,7 +167,7 @@ ColumnLayout {
                             }
                             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                             font.pixelSize: Theme.fontLg
-                            color: modelData.connected ? Theme.mauve : Theme.subtext0
+                            color: modelData.connected ? Theme.accent : Theme.inkFaint
                         }
 
                         // Name & MAC
@@ -180,7 +180,7 @@ ColumnLayout {
                                 font.family: "sans-serif"
                                 font.pixelSize: Theme.fontSm
                                 font.bold: modelData.connected
-                                color: modelData.connected ? Theme.mauve : Theme.text
+                                color: modelData.connected ? Theme.accent : Theme.ink
                                 elide: Text.ElideRight
                                 Layout.fillWidth: true
                             }
@@ -189,7 +189,7 @@ ColumnLayout {
                                 text: modelData.connected ? "Connected" : (modelData.paired ? "Paired" : modelData.mac)
                                 font.family: "sans-serif"
                                 font.pixelSize: 10
-                                color: modelData.connected ? Theme.mauve : Theme.subtext0
+                                color: modelData.connected ? Theme.accent : Theme.inkFaint
                             }
                         }
 
@@ -204,7 +204,7 @@ ColumnLayout {
                                 text: "󰑐"
                                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                 font.pixelSize: Theme.fontMd
-                                color: Theme.mauve
+                                color: Theme.accent
                             }
 
                             Text {
@@ -213,7 +213,7 @@ ColumnLayout {
                                 text: "󰄴"
                                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                 font.pixelSize: Theme.fontMd
-                                color: Theme.mauve
+                                color: Theme.accent
                             }
                         }
                     }
@@ -240,6 +240,6 @@ ColumnLayout {
         text: "No paired Bluetooth devices found"
         font.family: "JetBrainsMono Nerd Font, sans-serif"
         font.pixelSize: Theme.fontSm
-        color: Theme.subtext0
+        color: Theme.inkFaint
     }
 }

@@ -31,7 +31,7 @@ RowLayout {
             Layout.preferredWidth: 28
             Layout.preferredHeight: 28
             radius: Theme.radiusSm
-            color: hoverArea.containsMouse ? Theme.surface0 : "transparent"
+            color: hoverArea.containsMouse ? Theme.bodyMid : "transparent"
 
             TrayMenu {
                 id: popupMenu

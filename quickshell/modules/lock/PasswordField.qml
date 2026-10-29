@@ -83,7 +83,7 @@ Item {
             width: 2
             height: 18
             radius: 1
-            color: Theme.accentMauve
+            color: Theme.accent
 
             SequentialAnimation on opacity {
                 running: root.focused
@@ -118,7 +118,7 @@ Item {
             elide: Text.ElideRight
             font.family: "sans-serif"
             font.pixelSize: Theme.fontMd
-            color: Theme.subtext0
+            color: Theme.inkFaint
         }
 
         // One dot per typed character, inside a clipped viewport so a long password
@@ -151,7 +151,7 @@ Item {
                         width: 7
                         height: 7
                         radius: 3.5
-                        color: Theme.accentPink
+                        color: Theme.accentCyan
                     }
 
                 }
@@ -164,7 +164,7 @@ Item {
         Rectangle {
             anchors.fill: parent
             radius: field.radius
-            color: Theme.accentMauve
+            color: Theme.accent
             opacity: 0
             visible: root.busy
 
@@ -255,7 +255,7 @@ Item {
         visible: root.message !== ""
         font.family: "sans-serif"
         font.pixelSize: Theme.fontSm
-        color: root.messageIsError ? Theme.red : Theme.subtext0
+        color: root.messageIsError ? Theme.danger : Theme.inkFaint
     }
 
 }

@@ -8,8 +8,8 @@ Rectangle {
     implicitWidth: 28
     implicitHeight: 28
     radius: Theme.radiusSm
-    color: launcherMouse.containsMouse ? Theme.surface0 : Theme.mantle
-    border.color: launcherMouse.containsMouse ? Theme.mauve : Theme.surface0
+    color: launcherMouse.containsMouse ? Theme.bodyMid : Theme.bodyLow
+    border.color: launcherMouse.containsMouse ? Theme.accent : Theme.bodyMid
     border.width: Theme.borderWidth
 
     Process {
@@ -21,7 +21,7 @@ Rectangle {
         text: ""
         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
         font.pixelSize: Theme.fontXl
-        color: launcherMouse.containsMouse ? Theme.mauve : "#89b4fa"
+        color: launcherMouse.containsMouse ? Theme.accent : "#89b4fa"
     }
 
     MouseArea {

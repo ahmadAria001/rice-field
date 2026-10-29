@@ -95,14 +95,14 @@ ColumnLayout {
             implicitWidth: 32
             implicitHeight: 32
             radius: Theme.radiusSm
-            color: muteMouse.containsMouse ? Theme.surface1 : Theme.surface0
+            color: muteMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid
 
             Text {
                 anchors.centerIn: parent
                 text: root.isMuted ? "󰝟" : (root.volumeLevel < 33 ? "󰕿" : (root.volumeLevel < 66 ? "󰖀" : "󰕾"))
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontLg
-                color: root.isMuted ? Theme.red : Theme.text
+                color: root.isMuted ? Theme.danger : Theme.ink
             }
 
             MouseArea {
@@ -141,12 +141,12 @@ ColumnLayout {
                 width: volSlider.availableWidth
                 height: implicitHeight
                 radius: Theme.radiusSm
-                color: Theme.surface0
+                color: Theme.bodyMid
 
                 Rectangle {
                     width: volSlider.visualPosition * parent.width
                     height: parent.height
-                    color: root.isMuted ? Theme.surface1 : Theme.mauve
+                    color: root.isMuted ? Theme.bodyTop : Theme.accent
                     radius: Theme.radiusSm
                 }
 
@@ -158,7 +158,7 @@ ColumnLayout {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
                     font.bold: true
-                    color: Theme.text
+                    color: Theme.ink
                 }
 
             }
@@ -169,7 +169,7 @@ ColumnLayout {
                 implicitWidth: 12
                 implicitHeight: 28
                 radius: 4
-                color: Theme.text
+                color: Theme.ink
                 visible: volSlider.pressed
             }
 
@@ -180,14 +180,14 @@ ColumnLayout {
             implicitWidth: 28
             implicitHeight: 28
             radius: Theme.radiusSm
-            color: audioDrillMouse.containsMouse ? Theme.surface1 : Theme.surface0
+            color: audioDrillMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid
 
             Text {
                 anchors.centerIn: parent
                 text: "󰅂"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontMd
-                color: Theme.text
+                color: Theme.ink
             }
 
             MouseArea {
@@ -216,14 +216,14 @@ ColumnLayout {
             implicitWidth: 32
             implicitHeight: 32
             radius: Theme.radiusSm
-            color: Theme.surface0
+            color: Theme.bodyMid
 
             Text {
                 anchors.centerIn: parent
                 text: root.brightnessLevel < 33 ? "󰃞" : (root.brightnessLevel < 66 ? "󰃟" : "󰃠")
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontLg
-                color: Theme.text
+                color: Theme.ink
             }
 
         }
@@ -250,12 +250,12 @@ ColumnLayout {
                 width: brightSlider.availableWidth
                 height: implicitHeight
                 radius: Theme.radiusSm
-                color: Theme.surface0
+                color: Theme.bodyMid
 
                 Rectangle {
                     width: brightSlider.visualPosition * parent.width
                     height: parent.height
-                    color: Theme.mauve
+                    color: Theme.accent
                     radius: Theme.radiusSm
                 }
 
@@ -267,7 +267,7 @@ ColumnLayout {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
                     font.bold: true
-                    color: Theme.text
+                    color: Theme.ink
                 }
 
             }
@@ -278,7 +278,7 @@ ColumnLayout {
                 implicitWidth: 12
                 implicitHeight: 28
                 radius: 4
-                color: Theme.text
+                color: Theme.ink
                 visible: brightSlider.pressed
             }
 
@@ -289,14 +289,14 @@ ColumnLayout {
             implicitWidth: 28
             implicitHeight: 28
             radius: Theme.radiusSm
-            color: brightDrillMouse.containsMouse ? Theme.surface1 : Theme.surface0
+            color: brightDrillMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid
 
             Text {
                 anchors.centerIn: parent
                 text: "󰅂"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontMd
-                color: Theme.text
+                color: Theme.ink
             }
 
             MouseArea {

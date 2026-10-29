@@ -55,17 +55,17 @@ Item {
 
                 GradientStop {
                     position: 0
-                    color: Qt.rgba(Theme.accentMauve.r, Theme.accentMauve.g, Theme.accentMauve.b, 0.22)
+                    color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.22)
                 }
 
                 GradientStop {
                     position: 0.55
-                    color: Qt.rgba(Theme.accentMauve.r, Theme.accentMauve.g, Theme.accentMauve.b, 0.07)
+                    color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.07)
                 }
 
                 GradientStop {
                     position: 1
-                    color: Qt.rgba(Theme.accentMauve.r, Theme.accentMauve.g, Theme.accentMauve.b, 0)
+                    color: Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0)
                 }
 
             }
@@ -135,7 +135,7 @@ Item {
         font.family: "sans-serif"
         font.pixelSize: Math.round(root.size * 0.38)
         font.bold: true
-        color: Theme.accentPink
+        color: Theme.accentCyan
     }
 
     // Accent ring on top of the crop.
@@ -143,7 +143,7 @@ Item {
         anchors.fill: parent
         radius: width / 2
         color: "transparent"
-        border.color: Theme.accentMauve
+        border.color: Theme.accent
         border.width: 2
     }
 

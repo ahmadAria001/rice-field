@@ -180,7 +180,7 @@ Item {
                     font.family: "sans-serif"
                     font.pixelSize: 17
                     font.bold: true
-                    color: Theme.text
+                    color: Theme.ink
                 }
 
                 Text {
@@ -193,7 +193,7 @@ Item {
                     text: "click or type to unlock"
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                     opacity: root.revealed ? 0 : 0.75
 
                     Behavior on opacity {
@@ -226,7 +226,7 @@ Item {
                     font.family: "sans-serif"
                     font.pixelSize: 84
                     font.weight: Font.Light
-                    color: Theme.text
+                    color: Theme.ink
                     style: Text.Raised
                     styleColor: Qt.rgba(0, 0, 0, 0.35)
 
@@ -246,7 +246,7 @@ Item {
                     text: Qt.formatDateTime(new Date(), "dddd, d MMMM")
                     font.family: "sans-serif"
                     font.pixelSize: 15
-                    color: Theme.subtext1
+                    color: Theme.inkDim
                     opacity: 0.9
 
                     Timer {

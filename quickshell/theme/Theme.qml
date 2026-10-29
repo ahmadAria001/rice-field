@@ -81,23 +81,10 @@ QtObject {
         { p: 1.00, c: themeRoot.accent }
     ]
 
-    // ===== legacy names =====
-    // The shell grew up on Catppuccin names and 500-odd call sites still use
-    // them. They are aliases now, not storage: nothing writes them, so they
-    // cannot drift from the Lacia tokens above.
-    readonly property color mantle: themeRoot.bodyLow
-    readonly property color base: themeRoot.glass
-    readonly property color surface0: themeRoot.bodyMid
-    readonly property color surface1: themeRoot.bodyTop
-    readonly property color text: themeRoot.ink
-    readonly property color subtext0: themeRoot.inkFaint
-    readonly property color subtext1: themeRoot.inkDim
-    readonly property color mauve: themeRoot.accent
-    readonly property color red: themeRoot.danger
-    // Fixed accents for dark, low-chrome surfaces (lock screen, fullscreen
-    // overlays). Kept as names because the lock screen asks for them by name.
-    readonly property color accentMauve: themeRoot.accent
-    readonly property color accentPink: themeRoot.accentCyan
+    // The Catppuccin names are gone. They were aliases, not storage, so removing
+    // them changes no colour -- but a stray `Theme.surface0` now fails at load
+    // instead of quietly working and re-teaching the old vocabulary to whoever
+    // reads the file next.
 
     // Metrics & Styling (always static)
     readonly property int radiusSm: 6

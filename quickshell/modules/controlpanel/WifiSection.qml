@@ -111,7 +111,7 @@ ColumnLayout {
             text: root.isConnecting ? ("Connecting to " + root.connectingSsid + "...") : (root.isScanning ? "Scanning networks..." : (root.networks.length + " networks found"))
             font.family: "JetBrainsMono Nerd Font, sans-serif"
             font.pixelSize: Theme.fontSm
-            color: root.isConnecting ? Theme.mauve : Theme.subtext0
+            color: root.isConnecting ? Theme.accent : Theme.inkFaint
             Layout.fillWidth: true
             elide: Text.ElideRight
         }
@@ -121,7 +121,7 @@ ColumnLayout {
             implicitWidth: 28
             implicitHeight: 28
             radius: Theme.radiusSm
-            color: rescanMouse.containsMouse && !root.isConnecting ? Theme.surface1 : Theme.surface0
+            color: rescanMouse.containsMouse && !root.isConnecting ? Theme.bodyTop : Theme.bodyMid
             opacity: (root.isScanning || root.isConnecting) ? 0.5 : 1.0
 
             Text {
@@ -129,7 +129,7 @@ ColumnLayout {
                 text: "󰑐"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontMd
-                color: Theme.text
+                color: Theme.ink
                 rotation: root.isScanning ? 360 : 0
                 Behavior on rotation {
                     NumberAnimation { duration: 800; loops: Animation.Infinite }
@@ -153,8 +153,8 @@ ColumnLayout {
         Layout.fillWidth: true
         implicitHeight: passCol.implicitHeight + 16
         radius: Theme.radiusSm
-        color: Theme.surface0
-        border.color: Theme.mauve
+        color: Theme.bodyMid
+        border.color: Theme.accent
         border.width: 1
 
         ColumnLayout {
@@ -168,15 +168,15 @@ ColumnLayout {
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontSm
                 font.bold: true
-                color: Theme.text
+                color: Theme.ink
             }
 
             Rectangle {
                 Layout.fillWidth: true
                 implicitHeight: 32
                 radius: 6
-                color: Theme.mantle
-                border.color: pwdInput.activeFocus ? Theme.mauve : Theme.surface1
+                color: Theme.bodyLow
+                border.color: pwdInput.activeFocus ? Theme.accent : Theme.bodyTop
                 border.width: 1
 
                 TextInput {
@@ -185,7 +185,7 @@ ColumnLayout {
                     anchors.leftMargin: 8
                     anchors.rightMargin: 8
                     verticalAlignment: TextInput.AlignVCenter
-                    color: Theme.text
+                    color: Theme.ink
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
                     echoMode: TextInput.Password
@@ -207,8 +207,8 @@ ColumnLayout {
                     implicitWidth: 64
                     implicitHeight: 26
                     radius: 6
-                    color: cancelMouse.containsMouse ? Theme.surface1 : "transparent"
-                    border.color: Theme.surface1
+                    color: cancelMouse.containsMouse ? Theme.bodyTop : "transparent"
+                    border.color: Theme.bodyTop
                     border.width: 1
 
                     Text {
@@ -216,7 +216,7 @@ ColumnLayout {
                         text: "Cancel"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     MouseArea {
@@ -236,7 +236,7 @@ ColumnLayout {
                     implicitWidth: 68
                     implicitHeight: 26
                     radius: 6
-                    color: root.isConnecting ? Theme.surface1 : (joinMouse.containsMouse ? Theme.mauve : Theme.surface1)
+                    color: root.isConnecting ? Theme.bodyTop : (joinMouse.containsMouse ? Theme.accent : Theme.bodyTop)
 
                     Text {
                         anchors.centerIn: parent
@@ -244,7 +244,7 @@ ColumnLayout {
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
                         font.bold: true
-                        color: root.isConnecting ? Theme.subtext0 : (joinMouse.containsMouse ? Theme.mantle : Theme.text)
+                        color: root.isConnecting ? Theme.inkFaint : (joinMouse.containsMouse ? Theme.bodyLow : Theme.ink)
                     }
 
                     MouseArea {
@@ -286,8 +286,8 @@ ColumnLayout {
                     Layout.fillWidth: true
                     implicitHeight: 44
                     radius: Theme.radiusSm
-                    color: modelData.active ? Theme.surface1 : (itemMouse.containsMouse && !root.isConnecting ? Theme.surface0 : "transparent")
-                    border.color: modelData.active ? Theme.mauve : "transparent"
+                    color: modelData.active ? Theme.bodyTop : (itemMouse.containsMouse && !root.isConnecting ? Theme.bodyMid : "transparent")
+                    border.color: modelData.active ? Theme.accent : "transparent"
                     border.width: modelData.active ? 1 : 0
                     opacity: (root.isConnecting && root.connectingSsid !== modelData.ssid) ? 0.45 : 1.0
 
@@ -308,7 +308,7 @@ ColumnLayout {
                             }
                             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                             font.pixelSize: Theme.fontLg
-                            color: modelData.active ? Theme.mauve : Theme.subtext0
+                            color: modelData.active ? Theme.accent : Theme.inkFaint
                         }
 
                         // SSID & Info
@@ -321,7 +321,7 @@ ColumnLayout {
                                 font.family: "sans-serif"
                                 font.pixelSize: Theme.fontSm
                                 font.bold: modelData.active
-                                color: modelData.active ? Theme.mauve : Theme.text
+                                color: modelData.active ? Theme.accent : Theme.ink
                                 elide: Text.ElideRight
                                 Layout.fillWidth: true
                             }
@@ -332,14 +332,14 @@ ColumnLayout {
                                     text: modelData.active ? "Connected" : (modelData.secured ? "Secured" : "Open")
                                     font.family: "sans-serif"
                                     font.pixelSize: 10
-                                    color: modelData.active ? Theme.mauve : Theme.subtext0
+                                    color: modelData.active ? Theme.accent : Theme.inkFaint
                                 }
                                 Text {
                                     visible: modelData.secured
                                     text: "󰌾"
                                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                     font.pixelSize: 10
-                                    color: Theme.subtext0
+                                    color: Theme.inkFaint
                                 }
                             }
                         }
@@ -355,7 +355,7 @@ ColumnLayout {
                                 text: "󰑐"
                                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                 font.pixelSize: Theme.fontMd
-                                color: Theme.mauve
+                                color: Theme.accent
                             }
 
                             Text {
@@ -364,7 +364,7 @@ ColumnLayout {
                                 text: "󰄴"
                                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                 font.pixelSize: Theme.fontMd
-                                color: Theme.mauve
+                                color: Theme.accent
                             }
                         }
                     }
@@ -398,6 +398,6 @@ ColumnLayout {
         text: "No Wi-Fi networks found"
         font.family: "JetBrainsMono Nerd Font, sans-serif"
         font.pixelSize: Theme.fontSm
-        color: Theme.subtext0
+        color: Theme.inkFaint
     }
 }

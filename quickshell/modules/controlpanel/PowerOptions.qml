@@ -32,8 +32,8 @@ GridLayout {
         Layout.fillWidth: true
         implicitHeight: 62
         radius: Theme.radiusSm
-        color: tileMouse.containsMouse ? (tile.danger ? "#312026" : Theme.surface1) : Theme.surface0
-        border.color: tileMouse.containsMouse && tile.danger ? Theme.red : "transparent"
+        color: tileMouse.containsMouse ? (tile.danger ? "#312026" : Theme.bodyTop) : Theme.bodyMid
+        border.color: tileMouse.containsMouse && tile.danger ? Theme.danger : "transparent"
         border.width: Theme.borderWidth
 
         ColumnLayout {
@@ -45,7 +45,7 @@ GridLayout {
                 text: tile.glyph
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontXl
-                color: tile.danger ? Theme.red : Theme.text
+                color: tile.danger ? Theme.danger : Theme.ink
             }
 
             Text {
@@ -53,7 +53,7 @@ GridLayout {
                 text: tile.label
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontSm
-                color: tileMouse.containsMouse ? Theme.text : Theme.subtext0
+                color: tileMouse.containsMouse ? Theme.ink : Theme.inkFaint
             }
 
         }

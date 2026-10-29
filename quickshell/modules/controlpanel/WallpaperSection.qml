@@ -94,8 +94,8 @@ ColumnLayout {
             Layout.fillWidth: true
             implicitHeight: 34
             radius: Theme.radiusSm
-            color: Theme.surface0
-            border.color: searchInput.activeFocus ? Theme.mauve : Theme.surface1
+            color: Theme.bodyMid
+            border.color: searchInput.activeFocus ? Theme.accent : Theme.bodyTop
             border.width: Theme.borderWidth
 
             RowLayout {
@@ -108,20 +108,20 @@ ColumnLayout {
                     text: "󰍉"
                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontMd
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                 }
 
                 TextInput {
                     id: searchInput
 
                     Layout.fillWidth: true
-                    color: Theme.text
+                    color: Theme.ink
                     font.family: "JetBrainsMono Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontSm
                     verticalAlignment: TextInput.AlignVCenter
                     selectByMouse: true
-                    selectionColor: Theme.mauve
-                    selectedTextColor: Theme.mantle
+                    selectionColor: Theme.accent
+                    selectedTextColor: Theme.bodyLow
                     clip: true
                     onTextChanged: {
                         root.searchText = text;
@@ -131,7 +131,7 @@ ColumnLayout {
                         anchors.fill: parent
                         text: "Search wallpapers..."
                         font: searchInput.font
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                         verticalAlignment: Text.AlignVCenter
                         visible: !searchInput.text && !searchInput.activeFocus
                     }
@@ -143,7 +143,7 @@ ColumnLayout {
                     text: "󰅖"
                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontMd
-                    color: clearMouse.containsMouse ? Theme.red : Theme.subtext0
+                    color: clearMouse.containsMouse ? Theme.danger : Theme.inkFaint
 
                     MouseArea {
                         id: clearMouse
@@ -168,8 +168,8 @@ ColumnLayout {
             implicitWidth: 34
             implicitHeight: 34
             radius: Theme.radiusSm
-            color: refreshMouse.containsMouse ? Theme.surface1 : Theme.surface0
-            border.color: Theme.surface1
+            color: refreshMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid
+            border.color: Theme.bodyTop
             border.width: Theme.borderWidth
 
             Text {
@@ -177,7 +177,7 @@ ColumnLayout {
                 text: "󰑐"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontMd
-                color: Theme.mauve
+                color: Theme.accent
             }
 
             MouseArea {
@@ -220,9 +220,9 @@ ColumnLayout {
                     width: cardWidth
                     height: Math.floor(cardWidth * 0.62)
                     radius: Theme.radiusSm
-                    color: Theme.surface0
+                    color: Theme.bodyMid
                     border.width: isCurrent ? 2 : (cardMouse.containsMouse ? 2 : 1)
-                    border.color: isCurrent ? Theme.mauve : (cardMouse.containsMouse ? Theme.subtext0 : Theme.surface1)
+                    border.color: isCurrent ? Theme.accent : (cardMouse.containsMouse ? Theme.inkFaint : Theme.bodyTop)
 
                     Image {
                         anchors.fill: parent
@@ -253,7 +253,7 @@ ColumnLayout {
                                 text: modelData.name
                                 font.family: "JetBrainsMono Nerd Font, sans-serif"
                                 font.pixelSize: 10
-                                color: card.isCurrent ? Theme.mauve : Theme.text
+                                color: card.isCurrent ? Theme.accent : Theme.ink
                                 elide: Text.ElideRight
                                 verticalAlignment: Text.AlignVCenter
                             }
@@ -271,14 +271,14 @@ ColumnLayout {
                         width: 20
                         height: 20
                         radius: 10
-                        color: Theme.mauve
+                        color: Theme.accent
 
                         Text {
                             anchors.centerIn: parent
                             text: "󰄴"
                             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                             font.pixelSize: 12
-                            color: Theme.mantle
+                            color: Theme.bodyLow
                         }
 
                     }
@@ -311,7 +311,7 @@ ColumnLayout {
         text: root.allWallpapers.length === 0 ? "No wallpapers in ~/Pictures/Wallpapers" : "No matches found"
         font.family: "JetBrainsMono Nerd Font, sans-serif"
         font.pixelSize: Theme.fontSm
-        color: Theme.subtext0
+        color: Theme.inkFaint
     }
 
 }

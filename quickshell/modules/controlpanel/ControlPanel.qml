@@ -245,14 +245,14 @@ PopupWindow {
                         implicitWidth: 28
                         implicitHeight: 28
                         radius: Theme.radiusSm
-                        color: backMouse.containsMouse ? Theme.surface1 : "transparent"
+                        color: backMouse.containsMouse ? Theme.bodyTop : "transparent"
 
                         Text {
                             anchors.centerIn: parent
                             text: "󰁍"
                             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                             font.pixelSize: Theme.fontLg
-                            color: Theme.mauve
+                            color: Theme.accent
                         }
 
                         MouseArea {
@@ -284,7 +284,7 @@ PopupWindow {
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontMd
                         font.bold: true
-                        color: Theme.text
+                        color: Theme.ink
                     }
                 }
 
@@ -331,7 +331,7 @@ PopupWindow {
                         }
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontMd
-                        color: (UPower.displayDevice && UPower.displayDevice.percentage < 0.2) ? Theme.red : Theme.mauve
+                        color: (UPower.displayDevice && UPower.displayDevice.percentage < 0.2) ? Theme.danger : Theme.accent
                     }
 
                     Text {
@@ -339,7 +339,7 @@ PopupWindow {
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
                         font.bold: true
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
                 }
             }

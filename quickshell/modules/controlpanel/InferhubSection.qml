@@ -30,8 +30,8 @@ Rectangle {
     Layout.fillWidth: true
     implicitHeight: 68
     radius: Theme.radiusSm
-    color: Theme.surface0
-    border.color: Theme.surface1
+    color: Theme.bodyMid
+    border.color: Theme.bodyTop
     border.width: Theme.borderWidth
 
     Component.onCompleted: {
@@ -79,7 +79,7 @@ Rectangle {
             implicitWidth: 46
             implicitHeight: 46
             radius: Theme.radiusSm
-            color: Theme.surface1
+            color: Theme.bodyTop
             clip: true
 
             Image {
@@ -105,7 +105,7 @@ Rectangle {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontSm
                     font.bold: true
-                    color: Theme.text
+                    color: Theme.ink
                 }
 
                 // Active status dot
@@ -113,7 +113,7 @@ Rectangle {
                     implicitWidth: 6
                     implicitHeight: 6
                     radius: 3
-                    color: root.isAvailable ? "#a6e3a1" : Theme.subtext0
+                    color: root.isAvailable ? "#a6e3a1" : Theme.inkFaint
                 }
             }
 
@@ -127,14 +127,14 @@ Rectangle {
                         text: "Bal:"
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: 11
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
                     Text {
                         text: root.balanceStr
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: 11
                         font.bold: true
-                        color: Theme.mauve
+                        color: Theme.accent
                     }
                 }
 
@@ -142,7 +142,7 @@ Rectangle {
                     text: "•"
                     font.family: "sans-serif"
                     font.pixelSize: 10
-                    color: Theme.surface1
+                    color: Theme.bodyTop
                 }
 
                 RowLayout {
@@ -151,13 +151,13 @@ Rectangle {
                         text: "30d:"
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: 11
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
                     Text {
                         text: root.spendStr
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: 11
-                        color: Theme.text
+                        color: Theme.ink
                     }
                 }
             }
@@ -168,8 +168,8 @@ Rectangle {
             implicitWidth: 28
             implicitHeight: 28
             radius: Theme.radiusSm
-            color: refreshMouse.containsMouse ? Theme.surface1 : "transparent"
-            border.color: refreshMouse.containsMouse ? Theme.surface1 : "transparent"
+            color: refreshMouse.containsMouse ? Theme.bodyTop : "transparent"
+            border.color: refreshMouse.containsMouse ? Theme.bodyTop : "transparent"
             border.width: Theme.borderWidth
             ToolTip.visible: refreshMouse.containsMouse
             ToolTip.text: "Refresh InferHub balance"
@@ -180,7 +180,7 @@ Rectangle {
                 text: "󰑐"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontMd
-                color: root.isRefreshing ? Theme.mauve : Theme.subtext0
+                color: root.isRefreshing ? Theme.accent : Theme.inkFaint
                 rotation: root.isRefreshing ? 360 : 0
                 Behavior on rotation {
                     NumberAnimation { duration: 600; loops: Animation.Infinite }

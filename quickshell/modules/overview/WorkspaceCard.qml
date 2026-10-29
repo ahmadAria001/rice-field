@@ -65,12 +65,12 @@ GlassCard {
             width: 22
             height: 22
             radius: 11
-            color: root.active ? Theme.accentMauve : Theme.surface0
+            color: root.active ? Theme.accent : Theme.bodyMid
 
             Text {
                 anchors.centerIn: parent
                 text: root.wsId
-                color: root.active ? Theme.base : Theme.subtext0
+                color: root.active ? Theme.glass : Theme.inkFaint
                 font.family: "Inter"
                 font.pixelSize: Theme.fontSm
                 font.bold: true
@@ -80,7 +80,7 @@ GlassCard {
 
         Text {
             text: root.windows.length === 1 ? "1 window" : root.windows.length + " windows"
-            color: Theme.subtext0
+            color: Theme.inkFaint
             font.family: "Inter"
             font.pixelSize: Theme.fontSm
         }
@@ -99,7 +99,7 @@ GlassCard {
             Text {
                 anchors.centerIn: parent
                 text: "󰁔"
-                color: Theme.surface1
+                color: Theme.bodyTop
                 font.family: "MesloLGS Nerd Font"
                 font.pixelSize: 12
             }
@@ -124,9 +124,9 @@ GlassCard {
         Rectangle {
             anchors.fill: parent
             radius: Theme.radiusSm
-            color: Theme.base
+            color: Theme.glass
             border.width: Theme.borderWidth
-            border.color: Theme.surface0
+            border.color: Theme.bodyMid
         }
 
         Repeater {
@@ -145,7 +145,7 @@ GlassCard {
             anchors.centerIn: parent
             visible: root.windows.length === 0
             text: "empty"
-            color: Theme.surface1
+            color: Theme.bodyTop
             font.family: "Inter"
             font.pixelSize: Theme.fontSm
         }

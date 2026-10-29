@@ -113,7 +113,7 @@ ColumnLayout {
                 text: "󰃠"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontMd
-                color: Theme.mauve
+                color: Theme.accent
             }
 
             Text {
@@ -121,7 +121,7 @@ ColumnLayout {
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontMd
                 font.bold: true
-                color: Theme.text
+                color: Theme.ink
                 Layout.fillWidth: true
             }
 
@@ -130,7 +130,7 @@ ColumnLayout {
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontSm
                 font.bold: true
-                color: Theme.subtext0
+                color: Theme.inkFaint
             }
 
         }
@@ -155,12 +155,12 @@ ColumnLayout {
                 width: internalSlider.availableWidth
                 height: implicitHeight
                 radius: Theme.radiusSm
-                color: Theme.surface0
+                color: Theme.bodyMid
 
                 Rectangle {
                     width: internalSlider.visualPosition * parent.width
                     height: parent.height
-                    color: Theme.mauve
+                    color: Theme.accent
                     radius: Theme.radiusSm
                 }
 
@@ -172,7 +172,7 @@ ColumnLayout {
                 implicitWidth: 12
                 implicitHeight: 28
                 radius: 4
-                color: Theme.text
+                color: Theme.ink
                 visible: internalSlider.pressed
             }
 
@@ -193,7 +193,7 @@ ColumnLayout {
                 text: "󰍹"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontMd
-                color: Theme.mauve
+                color: Theme.accent
             }
 
             Text {
@@ -201,7 +201,7 @@ ColumnLayout {
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontMd
                 font.bold: true
-                color: Theme.text
+                color: Theme.ink
                 Layout.fillWidth: true
             }
 
@@ -210,7 +210,7 @@ ColumnLayout {
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontSm
                 font.bold: true
-                color: Theme.subtext0
+                color: Theme.inkFaint
             }
 
         }
@@ -235,12 +235,12 @@ ColumnLayout {
                 width: externalSlider.availableWidth
                 height: implicitHeight
                 radius: Theme.radiusSm
-                color: Theme.surface0
+                color: Theme.bodyMid
 
                 Rectangle {
                     width: externalSlider.visualPosition * parent.width
                     height: parent.height
-                    color: Theme.mauve
+                    color: Theme.accent
                     radius: Theme.radiusSm
                 }
 
@@ -252,7 +252,7 @@ ColumnLayout {
                 implicitWidth: 12
                 implicitHeight: 28
                 radius: 4
-                color: Theme.text
+                color: Theme.ink
                 visible: externalSlider.pressed
             }
 

@@ -13,7 +13,7 @@ Rectangle {
     Layout.fillWidth: true
     implicitHeight: 40
     radius: Theme.radiusSm
-    color: rowMouse.containsMouse ? Theme.surface1 : Theme.surface0
+    color: rowMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid
 
     RowLayout {
         anchors.fill: parent
@@ -25,7 +25,7 @@ Rectangle {
             text: ""
             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
             font.pixelSize: Theme.fontLg
-            color: rowMouse.containsMouse ? Theme.red : Theme.subtext0
+            color: rowMouse.containsMouse ? Theme.danger : Theme.inkFaint
         }
 
         Text {
@@ -34,14 +34,14 @@ Rectangle {
             font.family: "sans-serif"
             font.pixelSize: Theme.fontMd
             font.bold: true
-            color: Theme.text
+            color: Theme.ink
         }
 
         Text {
             text: "󰁔"
             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
             font.pixelSize: Theme.fontMd
-            color: Theme.subtext0
+            color: Theme.inkFaint
         }
 
     }

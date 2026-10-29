@@ -15,8 +15,8 @@ Rectangle {
     implicitWidth: 28
     implicitHeight: 28
     radius: Theme.radiusSm
-    color: root.active ? "#312026" : (powerMouse.containsMouse ? "#312026" : Theme.mantle)
-    border.color: (root.active || powerMouse.containsMouse) ? Theme.red : Theme.surface0
+    color: root.active ? "#312026" : (powerMouse.containsMouse ? "#312026" : Theme.bodyLow)
+    border.color: (root.active || powerMouse.containsMouse) ? Theme.danger : Theme.bodyMid
     border.width: Theme.borderWidth
 
     Text {
@@ -24,7 +24,7 @@ Rectangle {
         text: ""
         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
         font.pixelSize: Theme.fontLg
-        color: (root.active || powerMouse.containsMouse) ? Theme.red : Theme.subtext0
+        color: (root.active || powerMouse.containsMouse) ? Theme.danger : Theme.inkFaint
     }
 
     MouseArea {

@@ -40,15 +40,15 @@ Rectangle {
     readonly property real hotAt: 0.95
     readonly property color memColor: {
         if (!root.ok)
-            return Theme.subtext0;
+            return Theme.inkFaint;
 
         if (root.fraction >= root.hotAt)
-            return Theme.red;
+            return Theme.danger;
 
         if (root.fraction >= root.warnAt)
             return "#f9e2af";
 
-        return Theme.text;
+        return Theme.ink;
     }
 
     // One block per tick, accumulated here and parsed when the sentinel arrives. The
@@ -107,8 +107,8 @@ Rectangle {
     implicitHeight: 28
     implicitWidth: pillLayout.implicitWidth + 16
     radius: Theme.radiusSm
-    color: pillMouse.containsMouse ? Theme.surface0 : Theme.mantle
-    border.color: pillMouse.containsMouse ? Theme.mauve : Theme.surface0
+    color: pillMouse.containsMouse ? Theme.bodyMid : Theme.bodyLow
+    border.color: pillMouse.containsMouse ? Theme.accent : Theme.bodyMid
     border.width: Theme.borderWidth
 
     // One sampler for the whole card: meminfo is cheap, and polling it once a second
@@ -135,14 +135,14 @@ Rectangle {
             text: "󰍛"
             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
             font.pixelSize: Theme.fontMd
-            color: root.ok ? root.memColor : Theme.subtext0
+            color: root.ok ? root.memColor : Theme.inkFaint
         }
 
         Text {
             text: root.ok ? Math.round(root.fraction * 100) + "%" : "—"
             font.family: "JetBrainsMono Nerd Font, sans-serif"
             font.pixelSize: Theme.fontSm
-            color: root.ok ? root.memColor : Theme.subtext0
+            color: root.ok ? root.memColor : Theme.inkFaint
         }
 
     }
@@ -189,7 +189,7 @@ Rectangle {
                         text: "󰍛"
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: root.ok ? root.memColor : Theme.subtext0
+                        color: root.ok ? root.memColor : Theme.inkFaint
                     }
 
                     Text {
@@ -198,14 +198,14 @@ Rectangle {
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
                         font.bold: true
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                     Text {
                         text: root.ok ? Math.round(root.fraction * 100) + "%" : "—"
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: root.ok ? root.memColor : Theme.subtext0
+                        color: root.ok ? root.memColor : Theme.inkFaint
                     }
 
                 }
@@ -215,13 +215,13 @@ Rectangle {
                     Layout.fillWidth: true
                     implicitHeight: 4
                     radius: 2
-                    color: Theme.surface0
+                    color: Theme.bodyMid
 
                     Rectangle {
                         width: parent.width * root.fraction
                         height: parent.height
                         radius: parent.radius
-                        color: root.fraction >= root.hotAt ? Theme.red : Theme.mauve
+                        color: root.fraction >= root.hotAt ? Theme.danger : Theme.accent
                     }
 
                 }
@@ -236,7 +236,7 @@ Rectangle {
                         text: "Used"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -245,14 +245,14 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: root.ok ? root.memColor : Theme.subtext0
+                        color: root.ok ? root.memColor : Theme.inkFaint
                     }
 
                     Text {
                         text: "Free"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -261,14 +261,14 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                     Text {
                         text: "Total"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -277,14 +277,14 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                     Text {
                         text: "Cached"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -294,14 +294,14 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                     Text {
                         text: "Swap"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -318,7 +318,7 @@ Rectangle {
                         horizontalAlignment: Text.AlignRight
                         font.family: "JetBrainsMono Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.text
+                        color: Theme.ink
                     }
 
                 }

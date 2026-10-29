@@ -23,7 +23,7 @@ Rectangle {
     width: ListView.view ? ListView.view.width : 0
     implicitHeight: 52
     radius: Theme.radiusSm
-    color: isCurrent ? Theme.surface1 : (itemMouse.containsMouse ? Theme.surface0 : "transparent")
+    color: isCurrent ? Theme.bodyTop : (itemMouse.containsMouse ? Theme.bodyMid : "transparent")
 
     MouseArea {
         id: itemMouse
@@ -54,7 +54,7 @@ Rectangle {
 
             Text {
                 text: (root.modelData && root.modelData.name) ? root.modelData.name : ""
-                color: Theme.text
+                color: Theme.ink
                 font.pixelSize: Theme.fontXl
                 font.bold: true
                 elide: Text.ElideRight
@@ -63,7 +63,7 @@ Rectangle {
 
             Text {
                 text: root.modelData ? (root.modelData.comment || root.modelData.genericName || "") : ""
-                color: Theme.subtext1
+                color: Theme.inkDim
                 font.pixelSize: Theme.fontSm
                 elide: Text.ElideRight
                 Layout.fillWidth: true

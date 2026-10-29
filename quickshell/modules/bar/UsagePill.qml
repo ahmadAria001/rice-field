@@ -25,8 +25,8 @@ Rectangle {
     implicitHeight: 28
     implicitWidth: pillLayout.implicitWidth + 16
     radius: Theme.radiusSm
-    color: pillMouse.containsMouse ? Theme.surface0 : Theme.mantle
-    border.color: pillMouse.containsMouse ? Theme.mauve : Theme.surface0
+    color: pillMouse.containsMouse ? Theme.bodyMid : Theme.bodyLow
+    border.color: pillMouse.containsMouse ? Theme.accent : Theme.bodyMid
     border.width: Theme.borderWidth
     Component.onCompleted: {
         refreshUsage(false);
@@ -72,14 +72,14 @@ Rectangle {
             text: "󱂛"
             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
             font.pixelSize: Theme.fontMd
-            color: root.isAvailable ? Theme.mauve : Theme.subtext0
+            color: root.isAvailable ? Theme.accent : Theme.inkFaint
         }
 
         Text {
             text: root.isAvailable ? root.balanceStr : "—"
             font.family: "JetBrainsMono Nerd Font, sans-serif"
             font.pixelSize: Theme.fontSm
-            color: root.isAvailable ? Theme.text : Theme.subtext0
+            color: root.isAvailable ? Theme.ink : Theme.inkFaint
         }
 
     }
@@ -115,7 +115,7 @@ Rectangle {
                 text: "󱂛"
                 font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                 font.pixelSize: Theme.fontSm
-                color: root.isAvailable ? Theme.mauve : Theme.subtext0
+                color: root.isAvailable ? Theme.accent : Theme.inkFaint
             }
 
             Text {
@@ -124,14 +124,14 @@ Rectangle {
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontSm
                 font.bold: true
-                color: Theme.text
+                color: Theme.ink
             }
 
             Rectangle {
                 implicitWidth: 6
                 implicitHeight: 6
                 radius: 3
-                color: root.isAvailable ? "#a6e3a1" : Theme.subtext0
+                color: root.isAvailable ? "#a6e3a1" : Theme.inkFaint
             }
 
         }
@@ -146,7 +146,7 @@ Rectangle {
                     text: "Bal:"
                     font.family: "JetBrainsMono Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontSm
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                 }
 
                 Text {
@@ -154,7 +154,7 @@ Rectangle {
                     font.family: "JetBrainsMono Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontSm
                     font.bold: true
-                    color: Theme.mauve
+                    color: Theme.accent
                 }
 
             }
@@ -163,7 +163,7 @@ Rectangle {
                 text: "•"
                 font.family: "sans-serif"
                 font.pixelSize: Theme.fontSm
-                color: Theme.surface1
+                color: Theme.bodyTop
             }
 
             RowLayout {
@@ -173,14 +173,14 @@ Rectangle {
                     text: "30d:"
                     font.family: "JetBrainsMono Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontSm
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                 }
 
                 Text {
                     text: root.isAvailable ? root.spendStr : "—"
                     font.family: "JetBrainsMono Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontSm
-                    color: Theme.text
+                    color: Theme.ink
                 }
 
             }

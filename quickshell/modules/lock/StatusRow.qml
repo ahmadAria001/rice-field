@@ -109,7 +109,7 @@ RowLayout {
             return "󰁺";
         }
         label: (UPower.displayDevice && UPower.displayDevice.isPresent) ? Math.round(UPower.displayDevice.percentage * 100) + "%" : "AC"
-        tint: (UPower.displayDevice && UPower.displayDevice.isPresent && UPower.displayDevice.percentage < 0.15) ? Theme.red : Theme.subtext0
+        tint: (UPower.displayDevice && UPower.displayDevice.isPresent && UPower.displayDevice.percentage < 0.15) ? Theme.danger : Theme.inkFaint
     }
 
     StatusItem {
@@ -120,7 +120,7 @@ RowLayout {
     StatusItem {
         glyph: root.muted ? "󰝟" : (root.volumeLevel < 34 ? "󰕿" : (root.volumeLevel < 67 ? "󰖀" : "󰕾"))
         label: root.muted ? "muted" : root.volumeLevel + "%"
-        tint: root.muted ? Theme.red : Theme.subtext0
+        tint: root.muted ? Theme.danger : Theme.inkFaint
     }
 
     component StatusItem: RowLayout {
@@ -128,7 +128,7 @@ RowLayout {
 
         required property string glyph
         required property string label
-        property color tint: Theme.subtext0
+        property color tint: Theme.inkFaint
 
         spacing: 7
 
@@ -143,7 +143,7 @@ RowLayout {
             text: statusItem.label
             font.family: "sans-serif"
             font.pixelSize: Theme.fontSm
-            color: Theme.subtext1
+            color: Theme.inkDim
         }
 
     }

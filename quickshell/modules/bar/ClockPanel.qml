@@ -176,14 +176,14 @@ PopupWindow {
                 implicitWidth: 22
                 implicitHeight: 22
                 radius: 11
-                color: prevMouse.containsMouse ? Theme.surface0 : "transparent"
+                color: prevMouse.containsMouse ? Theme.bodyMid : "transparent"
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰅁"
                     font.family: "MesloLGS Nerd Font"
                     font.pixelSize: 12
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                 }
 
                 MouseArea {
@@ -201,7 +201,7 @@ PopupWindow {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
                 text: Qt.formatDate(new Date(root.viewYear, root.viewMonth, 1), "MMMM yyyy")
-                color: Theme.text
+                color: Theme.ink
                 font.family: "Inter"
                 font.pixelSize: Theme.fontMd
                 font.bold: true
@@ -211,14 +211,14 @@ PopupWindow {
                 implicitWidth: 22
                 implicitHeight: 22
                 radius: 11
-                color: nextMouse.containsMouse ? Theme.surface0 : "transparent"
+                color: nextMouse.containsMouse ? Theme.bodyMid : "transparent"
 
                 Text {
                     anchors.centerIn: parent
                     text: "󰅂"
                     font.family: "MesloLGS Nerd Font"
                     font.pixelSize: 12
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                 }
 
                 MouseArea {
@@ -248,7 +248,7 @@ PopupWindow {
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     text: modelData
-                    color: Theme.surface1
+                    color: Theme.bodyTop
                     font.family: "Inter"
                     font.pixelSize: 10
                     font.bold: true
@@ -277,13 +277,13 @@ PopupWindow {
                         width: 26
                         height: 26
                         radius: 13
-                        color: parent.isToday ? Theme.accentMauve : "transparent"
+                        color: parent.isToday ? Theme.accent : "transparent"
                     }
 
                     Text {
                         anchors.centerIn: parent
                         text: modelData > 0 ? modelData : ""
-                        color: parent.isToday ? Theme.base : Theme.subtext0
+                        color: parent.isToday ? Theme.glass : Theme.inkFaint
                         font.family: "Inter"
                         font.pixelSize: 11
                         font.bold: parent.isToday
@@ -298,7 +298,7 @@ PopupWindow {
         Rectangle {
             Layout.fillWidth: true
             implicitHeight: 1
-            color: Theme.surface0
+            color: Theme.bodyMid
             visible: root.hasTrack
         }
 
@@ -311,7 +311,7 @@ PopupWindow {
                 implicitWidth: 34
                 implicitHeight: 34
                 radius: Theme.radiusSm
-                color: Theme.base
+                color: Theme.glass
                 clip: true
 
                 Image {
@@ -331,7 +331,7 @@ PopupWindow {
                 Text {
                     Layout.fillWidth: true
                     text: root.player ? (root.player.trackTitle || "") : ""
-                    color: Theme.text
+                    color: Theme.ink
                     font.family: "Inter"
                     font.pixelSize: Theme.fontSm
                     elide: Text.ElideRight
@@ -340,7 +340,7 @@ PopupWindow {
                 Text {
                     Layout.fillWidth: true
                     text: root.player ? (root.player.trackArtist || root.player.identity || "") : ""
-                    color: Theme.subtext0
+                    color: Theme.inkFaint
                     font.family: "Inter"
                     font.pixelSize: 10
                     elide: Text.ElideRight
@@ -355,7 +355,7 @@ PopupWindow {
                     text: "󰒮"
                     font.family: "MesloLGS Nerd Font"
                     font.pixelSize: 13
-                    color: prevTrackMouse.containsMouse ? Theme.accentMauve : Theme.subtext0
+                    color: prevTrackMouse.containsMouse ? Theme.accent : Theme.inkFaint
 
                     MouseArea {
                         id: prevTrackMouse
@@ -377,7 +377,7 @@ PopupWindow {
                     text: (root.player && root.player.isPlaying) ? "󰏤" : "󰐊"
                     font.family: "MesloLGS Nerd Font"
                     font.pixelSize: 14
-                    color: playMouse.containsMouse ? Theme.accentMauve : Theme.text
+                    color: playMouse.containsMouse ? Theme.accent : Theme.ink
 
                     MouseArea {
                         id: playMouse
@@ -399,7 +399,7 @@ PopupWindow {
                     text: "󰒭"
                     font.family: "MesloLGS Nerd Font"
                     font.pixelSize: 13
-                    color: nextTrackMouse.containsMouse ? Theme.accentMauve : Theme.subtext0
+                    color: nextTrackMouse.containsMouse ? Theme.accent : Theme.inkFaint
 
                     MouseArea {
                         id: nextTrackMouse
@@ -425,7 +425,7 @@ PopupWindow {
             Layout.fillWidth: true
             visible: !root.hasTrack
             text: "Nothing playing"
-            color: Theme.surface1
+            color: Theme.bodyTop
             font.family: "Inter"
             font.pixelSize: 10
         }
