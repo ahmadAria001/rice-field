@@ -1,6 +1,7 @@
 import "../../theme"
 import QtQuick
 import QtQuick.Layouts
+import "../../components"
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
@@ -133,15 +134,12 @@ PopupWindow {
         target: "clock"
     }
 
-    Rectangle {
+    GlassCard {
         id: card
 
-        color: Theme.mantle
-        border.color: Theme.surface0
-        border.width: Theme.borderWidth
-        radius: Theme.radiusMd
+        // Width is fixed so the calendar grid keeps its rhythm; the height comes from
+        // GlassCard's own content binding.
         implicitWidth: 292
-        implicitHeight: content.implicitHeight + 28
         opacity: root.shown ? 1 : 0
         scale: root.shown ? 1 : Theme.scaleDown
         transformOrigin: Item.Top
@@ -162,277 +160,267 @@ PopupWindow {
 
         }
 
-        ColumnLayout {
-            id: content
-
-            anchors.fill: parent
-            anchors.margins: 14
-            spacing: 10
-
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 4
-
-                Rectangle {
-                    implicitWidth: 22
-                    implicitHeight: 22
-                    radius: 11
-                    color: prevMouse.containsMouse ? Theme.surface0 : "transparent"
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "󰅁"
-                        font.family: "MesloLGS Nerd Font"
-                        font.pixelSize: 12
-                        color: Theme.subtext0
-                    }
-
-                    MouseArea {
-                        id: prevMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.shiftMonth(-1)
-                    }
-
-                }
-
-                Text {
-                    Layout.fillWidth: true
-                    horizontalAlignment: Text.AlignHCenter
-                    text: Qt.formatDate(new Date(root.viewYear, root.viewMonth, 1), "MMMM yyyy")
-                    color: Theme.text
-                    font.family: "Inter"
-                    font.pixelSize: Theme.fontMd
-                    font.bold: true
-                }
-
-                Rectangle {
-                    implicitWidth: 22
-                    implicitHeight: 22
-                    radius: 11
-                    color: nextMouse.containsMouse ? Theme.surface0 : "transparent"
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "󰅂"
-                        font.family: "MesloLGS Nerd Font"
-                        font.pixelSize: 12
-                        color: Theme.subtext0
-                    }
-
-                    MouseArea {
-                        id: nextMouse
-
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.shiftMonth(1)
-                    }
-
-                }
-
-            }
-
-            Grid {
-                Layout.alignment: Qt.AlignHCenter
-                columns: 7
-                spacing: 2
-
-                Repeater {
-                    model: ["M", "T", "W", "T", "F", "S", "S"]
-
-                    delegate: Text {
-                        width: root.cellWidth
-                        height: 16
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        text: modelData
-                        color: Theme.surface1
-                        font.family: "Inter"
-                        font.pixelSize: 10
-                        font.bold: true
-                    }
-
-                }
-
-            }
-
-            Grid {
-                Layout.alignment: Qt.AlignHCenter
-                columns: 7
-                spacing: 2
-
-                Repeater {
-                    model: root.cells
-
-                    delegate: Item {
-                        width: root.cellWidth
-                        height: root.cellHeight
-
-                        readonly property bool isToday: modelData > 0 && root.viewYear === root.today.getFullYear() && root.viewMonth === root.today.getMonth() && modelData === root.today.getDate()
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: 26
-                            height: 26
-                            radius: 13
-                            color: parent.isToday ? Theme.accentMauve : "transparent"
-                        }
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: modelData > 0 ? modelData : ""
-                            color: parent.isToday ? Theme.base : Theme.subtext0
-                            font.family: "Inter"
-                            font.pixelSize: 11
-                            font.bold: parent.isToday
-                        }
-
-                    }
-
-                }
-
-            }
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 4
 
             Rectangle {
-                Layout.fillWidth: true
-                implicitHeight: 1
-                color: Theme.surface0
-                visible: root.hasTrack
-            }
+                implicitWidth: 22
+                implicitHeight: 22
+                radius: 11
+                color: prevMouse.containsMouse ? Theme.surface0 : "transparent"
 
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 10
-                visible: root.hasTrack
-
-                Rectangle {
-                    implicitWidth: 34
-                    implicitHeight: 34
-                    radius: Theme.radiusSm
-                    color: Theme.base
-                    clip: true
-
-                    Image {
-                        anchors.fill: parent
-                        source: (root.player && root.player.trackArtUrl) ? root.player.trackArtUrl : ""
-                        fillMode: Image.PreserveAspectCrop
-                        asynchronous: true
-                        visible: source != ""
-                    }
-
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰅁"
+                    font.family: "MesloLGS Nerd Font"
+                    font.pixelSize: 12
+                    color: Theme.subtext0
                 }
 
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    spacing: 0
+                MouseArea {
+                    id: prevMouse
 
-                    Text {
-                        Layout.fillWidth: true
-                        text: root.player ? (root.player.trackTitle || "") : ""
-                        color: Theme.text
-                        font.family: "Inter"
-                        font.pixelSize: Theme.fontSm
-                        elide: Text.ElideRight
-                    }
-
-                    Text {
-                        Layout.fillWidth: true
-                        text: root.player ? (root.player.trackArtist || root.player.identity || "") : ""
-                        color: Theme.subtext0
-                        font.family: "Inter"
-                        font.pixelSize: 10
-                        elide: Text.ElideRight
-                    }
-
-                }
-
-                RowLayout {
-                    spacing: 2
-
-                    Text {
-                        text: "󰒮"
-                        font.family: "MesloLGS Nerd Font"
-                        font.pixelSize: 13
-                        color: prevTrackMouse.containsMouse ? Theme.accentMauve : Theme.subtext0
-
-                        MouseArea {
-                            id: prevTrackMouse
-
-                            anchors.fill: parent
-                            anchors.margins: -4
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (root.player)
-                                    root.player.previous();
-
-                            }
-                        }
-
-                    }
-
-                    Text {
-                        text: (root.player && root.player.isPlaying) ? "󰏤" : "󰐊"
-                        font.family: "MesloLGS Nerd Font"
-                        font.pixelSize: 14
-                        color: playMouse.containsMouse ? Theme.accentMauve : Theme.text
-
-                        MouseArea {
-                            id: playMouse
-
-                            anchors.fill: parent
-                            anchors.margins: -4
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (root.player)
-                                    root.player.togglePlaying();
-
-                            }
-                        }
-
-                    }
-
-                    Text {
-                        text: "󰒭"
-                        font.family: "MesloLGS Nerd Font"
-                        font.pixelSize: 13
-                        color: nextTrackMouse.containsMouse ? Theme.accentMauve : Theme.subtext0
-
-                        MouseArea {
-                            id: nextTrackMouse
-
-                            anchors.fill: parent
-                            anchors.margins: -4
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (root.player)
-                                    root.player.next();
-
-                            }
-                        }
-
-                    }
-
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.shiftMonth(-1)
                 }
 
             }
 
             Text {
                 Layout.fillWidth: true
-                visible: !root.hasTrack
-                text: "Nothing playing"
-                color: Theme.surface1
+                horizontalAlignment: Text.AlignHCenter
+                text: Qt.formatDate(new Date(root.viewYear, root.viewMonth, 1), "MMMM yyyy")
+                color: Theme.text
                 font.family: "Inter"
-                font.pixelSize: 10
+                font.pixelSize: Theme.fontMd
+                font.bold: true
+            }
+
+            Rectangle {
+                implicitWidth: 22
+                implicitHeight: 22
+                radius: 11
+                color: nextMouse.containsMouse ? Theme.surface0 : "transparent"
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰅂"
+                    font.family: "MesloLGS Nerd Font"
+                    font.pixelSize: 12
+                    color: Theme.subtext0
+                }
+
+                MouseArea {
+                    id: nextMouse
+
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.shiftMonth(1)
+                }
+
             }
 
         }
 
+        Grid {
+            Layout.alignment: Qt.AlignHCenter
+            columns: 7
+            spacing: 2
+
+            Repeater {
+                model: ["M", "T", "W", "T", "F", "S", "S"]
+
+                delegate: Text {
+                    width: root.cellWidth
+                    height: 16
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    text: modelData
+                    color: Theme.surface1
+                    font.family: "Inter"
+                    font.pixelSize: 10
+                    font.bold: true
+                }
+
+            }
+
+        }
+
+        Grid {
+            Layout.alignment: Qt.AlignHCenter
+            columns: 7
+            spacing: 2
+
+            Repeater {
+                model: root.cells
+
+                delegate: Item {
+                    width: root.cellWidth
+                    height: root.cellHeight
+
+                    readonly property bool isToday: modelData > 0 && root.viewYear === root.today.getFullYear() && root.viewMonth === root.today.getMonth() && modelData === root.today.getDate()
+
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: 26
+                        height: 26
+                        radius: 13
+                        color: parent.isToday ? Theme.accentMauve : "transparent"
+                    }
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: modelData > 0 ? modelData : ""
+                        color: parent.isToday ? Theme.base : Theme.subtext0
+                        font.family: "Inter"
+                        font.pixelSize: 11
+                        font.bold: parent.isToday
+                    }
+
+                }
+
+            }
+
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            implicitHeight: 1
+            color: Theme.surface0
+            visible: root.hasTrack
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 10
+            visible: root.hasTrack
+
+            Rectangle {
+                implicitWidth: 34
+                implicitHeight: 34
+                radius: Theme.radiusSm
+                color: Theme.base
+                clip: true
+
+                Image {
+                    anchors.fill: parent
+                    source: (root.player && root.player.trackArtUrl) ? root.player.trackArtUrl : ""
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                    visible: source != ""
+                }
+
+            }
+
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 0
+
+                Text {
+                    Layout.fillWidth: true
+                    text: root.player ? (root.player.trackTitle || "") : ""
+                    color: Theme.text
+                    font.family: "Inter"
+                    font.pixelSize: Theme.fontSm
+                    elide: Text.ElideRight
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    text: root.player ? (root.player.trackArtist || root.player.identity || "") : ""
+                    color: Theme.subtext0
+                    font.family: "Inter"
+                    font.pixelSize: 10
+                    elide: Text.ElideRight
+                }
+
+            }
+
+            RowLayout {
+                spacing: 2
+
+                Text {
+                    text: "󰒮"
+                    font.family: "MesloLGS Nerd Font"
+                    font.pixelSize: 13
+                    color: prevTrackMouse.containsMouse ? Theme.accentMauve : Theme.subtext0
+
+                    MouseArea {
+                        id: prevTrackMouse
+
+                        anchors.fill: parent
+                        anchors.margins: -4
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            if (root.player)
+                                root.player.previous();
+
+                        }
+                    }
+
+                }
+
+                Text {
+                    text: (root.player && root.player.isPlaying) ? "󰏤" : "󰐊"
+                    font.family: "MesloLGS Nerd Font"
+                    font.pixelSize: 14
+                    color: playMouse.containsMouse ? Theme.accentMauve : Theme.text
+
+                    MouseArea {
+                        id: playMouse
+
+                        anchors.fill: parent
+                        anchors.margins: -4
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            if (root.player)
+                                root.player.togglePlaying();
+
+                        }
+                    }
+
+                }
+
+                Text {
+                    text: "󰒭"
+                    font.family: "MesloLGS Nerd Font"
+                    font.pixelSize: 13
+                    color: nextTrackMouse.containsMouse ? Theme.accentMauve : Theme.subtext0
+
+                    MouseArea {
+                        id: nextTrackMouse
+
+                        anchors.fill: parent
+                        anchors.margins: -4
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            if (root.player)
+                                root.player.next();
+
+                        }
+                    }
+
+                }
+
+            }
+
+        }
+
+        Text {
+            Layout.fillWidth: true
+            visible: !root.hasTrack
+            text: "Nothing playing"
+            color: Theme.surface1
+            font.family: "Inter"
+            font.pixelSize: 10
+        }
     }
 
 }
