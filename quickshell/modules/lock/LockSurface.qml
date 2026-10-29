@@ -1,3 +1,4 @@
+import "../../components"
 import "../../theme"
 import QtQuick
 import QtQuick.Effects
@@ -67,24 +68,26 @@ Item {
 
     }
 
-    // Scrim: deepens the corners and keeps text legible over any wallpaper.
+    // Scrim: deepens the corners and keeps text legible over any wallpaper. It is
+    // built from Theme.edge rather than a literal near-black, so a palette
+    // regenerated from a different wallpaper darkens to *its* black.
     Rectangle {
         anchors.fill: parent
 
         gradient: Gradient {
             GradientStop {
                 position: 0
-                color: Qt.rgba(0.06, 0.06, 0.08, 0.72)
+                color: Qt.rgba(Theme.edge.r, Theme.edge.g, Theme.edge.b, 0.72)
             }
 
             GradientStop {
                 position: 0.45
-                color: Qt.rgba(0.06, 0.06, 0.08, 0.55)
+                color: Qt.rgba(Theme.edge.r, Theme.edge.g, Theme.edge.b, 0.55)
             }
 
             GradientStop {
                 position: 1
-                color: Qt.rgba(0.06, 0.06, 0.08, 0.82)
+                color: Qt.rgba(Theme.edge.r, Theme.edge.g, Theme.edge.b, 0.82)
             }
 
         }
@@ -220,6 +223,20 @@ Item {
                         onTriggered: dateText.text = Qt.formatDateTime(new Date(), "dddd, d MMMM")
                     }
 
+                }
+
+                // Her rule, under the date. This is the one place on the lock
+                // screen where the gradient is allowed to sit still and be looked
+                // at rather than being a 2px seam on a card: it is the only thing
+                // on screen that is unambiguously Lacia's colour.
+                HairBar {
+                    Layout.alignment: Qt.AlignHCenter
+                    Layout.topMargin: 14
+                    Layout.preferredWidth: 132
+                    Layout.preferredHeight: 2
+                    height: 2
+                    radius: 0
+                    opacity: 0.6
                 }
 
             }

@@ -1,4 +1,4 @@
-// "Sekai After Dark" lock screen.
+// "Lacia After Dark" -- the session lock, on Lacia's material.
 
 import QtQuick
 import Quickshell

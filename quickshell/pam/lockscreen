@@ -1,6 +1,6 @@
 #%PAM-1.0
 #
-# Lock screen authentication for "Sekai After Dark" (Quickshell).
+# Lock screen authentication for "Lacia After Dark" (Quickshell).
 #
 # Installed to ~/.config/quickshell/pam/lockscreen and selected through PamContext's
 # configDirectory.

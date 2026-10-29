@@ -98,7 +98,7 @@ Item {
     Rectangle {
         anchors.fill: parent
         radius: width / 2
-        color: Theme.surface0
+        color: Theme.bodyMid
     }
 
     Image {

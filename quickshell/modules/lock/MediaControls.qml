@@ -29,8 +29,8 @@ GlassCard {
             implicitWidth: 52
             implicitHeight: 52
             radius: Theme.radiusSm
-            color: Theme.surface0
-            border.color: Theme.surface1
+            color: Theme.bodyLow
+            border.color: Theme.rim
             border.width: Theme.borderWidth
             clip: true
 
@@ -87,7 +87,7 @@ GlassCard {
         }
 
         RowLayout {
-            spacing: 4
+            spacing: 6
 
             MediaButton {
                 glyph: "󰒮"
@@ -98,7 +98,7 @@ GlassCard {
             MediaButton {
                 glyph: root.player && root.player.isPlaying ? "󰏤" : "󰐊"
                 enabledAction: root.player !== null
-                tint: Theme.accentMauve
+                tint: Theme.accent
                 onTriggered: root.player.togglePlaying()
             }
 
@@ -117,17 +117,21 @@ GlassCard {
 
                 signal triggered()
 
-                implicitWidth: 30
-                implicitHeight: 30
-                radius: 15
-                color: buttonMouse.containsMouse && button.enabledAction ? Theme.surface1 : "transparent"
+                implicitWidth: 34
+                implicitHeight: 34
+                radius: 17
+                color: buttonMouse.containsMouse && button.enabledAction ? Theme.bodyTop : "transparent"
 
                 Text {
                     anchors.centerIn: parent
                     text: button.glyph
                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
-                    font.pixelSize: Theme.fontLg
-                    color: button.enabledAction ? button.tint : Theme.surface1
+                    font.pixelSize: Theme.fontXl
+                    // Disabled is dim ink, not a surface token: bodyTop is a fill
+                    // colour, and using it for text made a dead button look like a
+                    // hovered one.
+                    color: button.tint
+                    opacity: button.enabledAction ? 1 : 0.35
                 }
 
                 MouseArea {

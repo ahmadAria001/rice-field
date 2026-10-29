@@ -7,6 +7,7 @@
 // or disabled cannot take keyboard focus, so gating it makes typing silently do
 // nothing until the field has been clicked.
 
+import "../../components"
 import "../../theme"
 import QtQuick
 
@@ -39,9 +40,37 @@ Item {
 
         anchors.fill: parent
         radius: Theme.radiusMd
-        color: Theme.mantle
-        border.color: root.focused ? Theme.accentMauve : Theme.surface0
+        // The card surface, not the old mantle fill: bodyMid under a rim edge is the
+        // same raised material as a bar card, so the field on the lock screen and the
+        // field's cousins on the bar read as one thing.
+        color: Theme.bodyMid
+        border.color: root.focused ? Theme.accent : Theme.rim
         border.width: root.focused ? 2 : Theme.borderWidth
+
+        // Her hairline along the top edge, as on every card. It fades out on focus:
+        // two signals for one state (a 2px accent ring and a lit edge) compete, and
+        // the ring is the one that means "type here".
+        HairBar {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.leftMargin: parent.radius
+            anchors.rightMargin: parent.radius
+            anchors.topMargin: 1
+            height: 2
+            radius: 0
+            opacity: root.focused ? 0 : 0.34
+            fadeTo: "end"
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Theme.animFast
+                    easing.type: Theme.easeEntrance
+                }
+
+            }
+
+        }
 
         // Caret indicator: a soft accent bar that breathes while the field is active.
         Rectangle {
