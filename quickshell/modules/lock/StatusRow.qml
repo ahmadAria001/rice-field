@@ -15,9 +15,20 @@ RowLayout {
     property string netKind: "none"
     property string netName: ""
 
+    // Set when the current nmcli call produced a connected line. Without it there
+    // is no way to tell "the query failed" from "nothing is connected", and the
+    // row stays on whatever it last saw -- which is how it sat on "offline" for a
+    // whole session on a machine with a live ethernet link.
+    property bool netSawLine: false
+
     function refresh() {
         volProc.exec(["sh", "-c", "wpctl get-volume @DEFAULT_AUDIO_SINK@"]);
-        netProc.exec(["sh", "-c", "nmcli -t -f TYPE,NAME,STATE dev 2>/dev/null | grep ':connected$' | head -n1"]);
+        root.netSawLine = false;
+        // CONNECTION, not NAME: `device status` has no NAME field, so the query
+        // failed outright and its stderr went to /dev/null. The bar's pill asks
+        // for TYPE,STATE and has always worked, which is why only the lock screen
+        // was wrong.
+        netProc.exec(["sh", "-c", "nmcli -t -f TYPE,CONNECTION,STATE dev 2>/dev/null | grep ':connected$' | head -n1"]);
     }
 
     spacing: 22
@@ -48,11 +59,24 @@ RowLayout {
     Process {
         id: netProc
 
+        // A connection name can contain a colon; `-t` escapes those, and anchoring
+        // on the trailing ":connected" keeps the middle field intact either way.
+        onExited: {
+            if (!root.netSawLine) {
+                root.netKind = "none";
+                root.netName = "";
+            }
+        }
+
         stdout: SplitParser {
             onRead: (line) => {
-                const parts = line.trim().split(":");
-                root.netKind = parts[0] || "none";
-                root.netName = parts[1] || "";
+                const m = line.trim().match(/^([^:]+):(.*):connected$/);
+                if (!m)
+                    return;
+
+                root.netSawLine = true;
+                root.netKind = m[1];
+                root.netName = m[2];
             }
         }
 
