@@ -37,6 +37,14 @@ pragma Singleton
 //   accentCyan  her hair, highlights (a lit state, a hover)
 //   ice       her hair, roots (the brightest ink)
 //
+// ===== the one deliberate exception =====
+// The bar fills with `glass` and edges with `bodyMid`, which is one rung darker
+// than the rule everywhere else (a card is bodyMid under a rim edge). That is
+// not an oversight left over from the Catppuccin aliases: the bar floats over
+// the wallpaper rather than sitting on a surface, so it wants the deepest ground
+// and a quieter edge than a card that is already inside the shell. If you are
+// unifying surfaces, this is the one to leave alone.
+//
 // Everything below is written by PaletteLoader from palette.json, so
 // scripts/palette.sh can re-derive the whole set from a wallpaper and the
 // structure above survives.
