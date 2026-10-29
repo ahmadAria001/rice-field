@@ -418,6 +418,8 @@ hl.window_rule({
 })
 
 hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd("qs ipc call launcher toggle"))
+-- Settings: motion control today, the place for anything else that needs a switch
+hl.bind(mainMod .. " + comma", hl.dsp.exec_cmd("qs ipc call settings toggle"))
 
 -----------------------------------------------------
 ---- SCREENSHOTS ----

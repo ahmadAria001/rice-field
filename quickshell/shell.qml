@@ -6,6 +6,7 @@ import "modules/launcher"
 import "modules/lock"
 import "modules/notifications"
 import "modules/overview"
+import "modules/settings"
 import "theme"
 
 ShellRoot {
@@ -30,6 +31,9 @@ ShellRoot {
     }
 
     Overview {
+    }
+
+    Settings {
     }
 
 }
