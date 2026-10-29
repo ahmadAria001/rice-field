@@ -55,7 +55,7 @@ PanelWindow {
         copyProc.exec(["wl-copy", text]);
         Quickshell.clipboardText = text;
         addClip(text);
-        root.visible = false;
+        root.close();
     }
 
     function loadClips() {
@@ -85,9 +85,34 @@ PanelWindow {
     anchors.left: true
     anchors.right: true
     color: "transparent"
-    visible: false
+
+    // `shown` drives the fade; `visible` stays true until the fade has finished.
+    // Toggling `visible` directly gave this panel no close animation at all, which
+    // is why its exit scan was the one that never appeared.
+    property bool shown: false
+    readonly property bool onScreen: shown || card.opacity > 0.001
+
+    visible: onScreen
     WlrLayershell.layer: WlrLayer.Overlay
-    WlrLayershell.keyboardFocus: root.visible ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+    WlrLayershell.keyboardFocus: root.shown ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
+
+    function open() {
+        searchField.text = "";
+        searchField.forceActiveFocus();
+        clipList.currentIndex = 0;
+        root.shown = true;
+    }
+
+    function close() {
+        root.shown = false;
+    }
+
+    function toggle() {
+        if (root.shown)
+            root.close();
+        else
+            root.open();
+    }
     Component.onCompleted: {
         loadClips();
     }
@@ -95,23 +120,15 @@ PanelWindow {
     // IPC handler for toggling / opening
     IpcHandler {
         function toggle() {
-            root.visible = !root.visible;
-            if (root.visible) {
-                searchField.text = "";
-                searchField.forceActiveFocus();
-                clipList.currentIndex = 0;
-            }
+            root.toggle();
         }
 
         function open() {
-            root.visible = true;
-            searchField.text = "";
-            searchField.forceActiveFocus();
-            clipList.currentIndex = 0;
+            root.open();
         }
 
         function close() {
-            root.visible = false;
+            root.close();
         }
 
         target: "clipboard"
@@ -120,8 +137,8 @@ PanelWindow {
     // Dismiss with Escape
     Shortcut {
         sequence: "Escape"
-        enabled: root.visible
-        onActivated: root.visible = false
+        enabled: root.shown
+        onActivated: root.close()
     }
 
     // File persistence
@@ -180,11 +197,23 @@ PanelWindow {
     // Backdrop dismissal
     MouseArea {
         anchors.fill: parent
-        onClicked: root.visible = false
+        onClicked: root.close()
 
         Rectangle {
             anchors.fill: parent
-            color: "#80000000"
+            // The palette's own black rather than a literal, and faded with the
+            // card so the whole surface leaves together.
+            color: Qt.rgba(Theme.edge.r, Theme.edge.g, Theme.edge.b, 0.5)
+            opacity: root.shown ? 1 : 0
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: root.shown ? Theme.animNormal : Theme.animExit
+                    easing.type: root.shown ? Theme.easeEntrance : Theme.easeExit
+                }
+
+            }
+
         }
 
     }
@@ -203,6 +232,24 @@ PanelWindow {
         radius: Theme.radiusLg
         border.color: Theme.rim
         border.width: Theme.borderWidth
+        opacity: root.shown ? 1 : 0
+        scale: root.shown ? 1 : Theme.scaleDown
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: root.shown ? Theme.animNormal : Theme.animExit
+                easing.type: root.shown ? Theme.easeEntrance : Theme.easeExit
+            }
+
+        }
+
+        Behavior on scale {
+            NumberAnimation {
+                duration: root.shown ? Theme.animNormal : Theme.animExit
+                easing.type: root.shown ? Theme.easeEntrance : Theme.easeExit
+            }
+
+        }
 
         HairBar {
             anchors.left: parent.left
@@ -225,7 +272,7 @@ PanelWindow {
         // Overlay only: nothing between opens, and no input taken.
         ScanReveal {
             anchors.fill: parent
-            active: root.visible
+            active: root.shown
             z: 100
         }
 
@@ -244,7 +291,7 @@ PanelWindow {
                     text: "󰅌"
                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                     font.pixelSize: Theme.fontXl
-                    color: Theme.mauve
+                    color: Theme.accent
                 }
 
                 // Title
@@ -253,7 +300,7 @@ PanelWindow {
                     font.family: "sans-serif"
                     font.pixelSize: Theme.fontLg
                     font.bold: true
-                    color: Theme.text
+                    color: Theme.ink
                 }
 
                 // Item count pill
@@ -261,7 +308,7 @@ PanelWindow {
                     implicitWidth: countText.implicitWidth + 12
                     implicitHeight: 22
                     radius: Theme.radiusSm
-                    color: Theme.surface0
+                    color: Theme.bodyMid
 
                     Text {
                         id: countText
@@ -269,7 +316,7 @@ PanelWindow {
                         anchors.centerIn: parent
                         text: root.clips.length + " items"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                 }
@@ -284,8 +331,8 @@ PanelWindow {
                     implicitWidth: clearRow.implicitWidth + 14
                     implicitHeight: 26
                     radius: Theme.radiusSm
-                    color: clearMouse.containsMouse ? Theme.surface1 : Theme.surface0
-                    border.color: clearMouse.containsMouse ? Theme.red : "transparent"
+                    color: clearMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid
+                    border.color: clearMouse.containsMouse ? Theme.danger : "transparent"
                     border.width: Theme.borderWidth
 
                     RowLayout {
@@ -298,14 +345,14 @@ PanelWindow {
                             text: "󰆴"
                             font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                             font.pixelSize: Theme.fontSm
-                            color: clearMouse.containsMouse ? Theme.red : Theme.subtext0
+                            color: clearMouse.containsMouse ? Theme.danger : Theme.inkFaint
                         }
 
                         Text {
                             text: "Clear All"
                             font.family: "sans-serif"
                             font.pixelSize: Theme.fontSm
-                            color: clearMouse.containsMouse ? Theme.red : Theme.subtext0
+                            color: clearMouse.containsMouse ? Theme.danger : Theme.inkFaint
                         }
 
                     }
@@ -326,14 +373,14 @@ PanelWindow {
                     implicitWidth: 26
                     implicitHeight: 26
                     radius: Theme.radiusSm
-                    color: closeMouse.containsMouse ? Theme.surface1 : "transparent"
+                    color: closeMouse.containsMouse ? Theme.bodyTop : "transparent"
 
                     Text {
                         anchors.centerIn: parent
                         text: "󰅖"
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontMd
-                        color: closeMouse.containsMouse ? Theme.text : Theme.subtext0
+                        color: closeMouse.containsMouse ? Theme.ink : Theme.inkFaint
                     }
 
                     MouseArea {
@@ -342,7 +389,7 @@ PanelWindow {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: root.visible = false
+                        onClicked: root.close()
                     }
 
                 }
@@ -355,15 +402,15 @@ PanelWindow {
 
                 Layout.fillWidth: true
                 placeholderText: "Type to filter clips..."
-                placeholderTextColor: Theme.subtext0
+                placeholderTextColor: Theme.inkFaint
                 font.pixelSize: Theme.fontMd
-                color: Theme.text
+                color: Theme.ink
                 focus: true
                 leftPadding: 34
                 rightPadding: 32
                 Keys.onPressed: (event) => {
                     if (event.key === Qt.Key_Escape) {
-                        root.visible = false;
+                        root.close();
                         event.accepted = true;
                     } else if (event.key === Qt.Key_Down) {
                         clipList.incrementCurrentIndex();
@@ -380,9 +427,9 @@ PanelWindow {
                 }
 
                 background: Rectangle {
-                    color: Theme.surface0
+                    color: Theme.bodyMid
                     radius: Theme.radiusSm
-                    border.color: searchField.activeFocus ? Theme.mauve : Theme.surface1
+                    border.color: searchField.activeFocus ? Theme.accent : Theme.bodyTop
                     border.width: Theme.borderWidth
 
                     // Search icon inside textfield
@@ -393,7 +440,7 @@ PanelWindow {
                         text: "󰍉"
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontMd
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     // Clear search input button
@@ -405,7 +452,7 @@ PanelWindow {
                         text: "󰅖"
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: clearSearchMouse.containsMouse ? Theme.text : Theme.subtext0
+                        color: clearSearchMouse.containsMouse ? Theme.ink : Theme.inkFaint
 
                         MouseArea {
                             id: clearSearchMouse
@@ -440,7 +487,7 @@ PanelWindow {
                         text: "󰅌"
                         font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                         font.pixelSize: 36
-                        color: Theme.surface1
+                        color: Theme.bodyTop
                     }
 
                     Text {
@@ -449,7 +496,7 @@ PanelWindow {
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontMd
                         font.bold: true
-                        color: Theme.subtext0
+                        color: Theme.inkFaint
                     }
 
                     Text {
@@ -457,7 +504,7 @@ PanelWindow {
                         text: searchField.text === "" ? "Copied items will appear here automatically" : "Try searching with different keywords"
                         font.family: "sans-serif"
                         font.pixelSize: Theme.fontSm
-                        color: Theme.surface1
+                        color: Theme.bodyTop
                     }
 
                 }
@@ -500,8 +547,8 @@ PanelWindow {
                     width: ListView.view.width
                     implicitHeight: Math.max(52, previewColumn.implicitHeight + 16)
                     radius: Theme.radiusSm
-                    color: itemMouse.containsMouse ? Theme.surface0 : Theme.mantle
-                    border.color: itemCard.isSelected ? Theme.mauve : (itemMouse.containsMouse ? Theme.surface1 : Theme.surface0)
+                    color: itemMouse.containsMouse ? Theme.bodyMid : Theme.bodyLow
+                    border.color: itemCard.isSelected ? Theme.accent : (itemMouse.containsMouse ? Theme.bodyTop : Theme.bodyMid)
                     border.width: Theme.borderWidth
 
                     // Main card click: selects clip and closes panel for immediate pasting
@@ -529,7 +576,7 @@ PanelWindow {
                             implicitWidth: 26
                             implicitHeight: 26
                             radius: Theme.radiusSm
-                            color: itemCard.isSelected ? Theme.mauve : Theme.surface0
+                            color: itemCard.isSelected ? Theme.accent : Theme.bodyMid
 
                             Text {
                                 anchors.centerIn: parent
@@ -537,7 +584,7 @@ PanelWindow {
                                 font.family: "sans-serif"
                                 font.pixelSize: Theme.fontSm
                                 font.bold: true
-                                color: itemCard.isSelected ? Theme.mantle : Theme.subtext0
+                                color: itemCard.isSelected ? Theme.bodyLow : Theme.inkFaint
                             }
 
                         }
@@ -554,7 +601,7 @@ PanelWindow {
                                 text: itemCard.clipText.replace(/\r\n/g, "\n").replace(/\n/g, " ↵ ")
                                 font.family: "MesloLGS Nerd Font, monospace, sans-serif"
                                 font.pixelSize: Theme.fontSm
-                                color: Theme.text
+                                color: Theme.ink
                                 elide: Text.ElideRight
                                 maximumLineCount: 2
                                 wrapMode: Text.WrapAnywhere
@@ -569,7 +616,7 @@ PanelWindow {
                                 }
                                 font.family: "sans-serif"
                                 font.pixelSize: Theme.fontSm - 1
-                                color: Theme.subtext0
+                                color: Theme.inkFaint
                             }
 
                         }
@@ -584,8 +631,8 @@ PanelWindow {
                                 implicitWidth: 28
                                 implicitHeight: 28
                                 radius: Theme.radiusSm
-                                color: delMouse.containsMouse ? Theme.surface1 : "transparent"
-                                border.color: delMouse.containsMouse ? Theme.red : "transparent"
+                                color: delMouse.containsMouse ? Theme.bodyTop : "transparent"
+                                border.color: delMouse.containsMouse ? Theme.danger : "transparent"
                                 border.width: Theme.borderWidth
                                 ToolTip.visible: delMouse.containsMouse
                                 ToolTip.text: "Delete clip"
@@ -596,7 +643,7 @@ PanelWindow {
                                     text: "󰆴"
                                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                     font.pixelSize: Theme.fontMd
-                                    color: delMouse.containsMouse ? Theme.red : Theme.subtext0
+                                    color: delMouse.containsMouse ? Theme.danger : Theme.inkFaint
                                 }
 
                                 MouseArea {
@@ -620,7 +667,7 @@ PanelWindow {
                                 implicitWidth: 28
                                 implicitHeight: 28
                                 radius: Theme.radiusSm
-                                color: itemMouse.containsMouse ? Theme.mauve : "transparent"
+                                color: itemMouse.containsMouse ? Theme.accent : "transparent"
                                 ToolTip.visible: itemMouse.containsMouse && !delMouse.containsMouse
                                 ToolTip.text: "Click to select & copy for paste"
                                 ToolTip.delay: 300
@@ -630,7 +677,7 @@ PanelWindow {
                                     text: "󰆏"
                                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                     font.pixelSize: Theme.fontMd
-                                    color: itemMouse.containsMouse ? Theme.mantle : Theme.subtext0
+                                    color: itemMouse.containsMouse ? Theme.bodyLow : Theme.inkFaint
                                 }
 
                             }
