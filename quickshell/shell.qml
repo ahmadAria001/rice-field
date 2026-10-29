@@ -5,6 +5,7 @@ import "modules/clipboard"
 import "modules/launcher"
 import "modules/lock"
 import "modules/notifications"
+import "modules/overview"
 import "theme"
 
 ShellRoot {
@@ -26,6 +27,9 @@ ShellRoot {
     }
 
     Notifications {
+    }
+
+    Overview {
     }
 
 }
