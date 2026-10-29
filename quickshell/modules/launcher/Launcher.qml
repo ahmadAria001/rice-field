@@ -119,10 +119,17 @@ PanelWindow {
                 anchors.leftMargin: card.radius
                 anchors.rightMargin: card.radius
                 anchors.topMargin: 1
-                height: 1
+                height: 2
                 radius: 0
-                opacity: 0.22
+                opacity: 0.34
                 fadeTo: "end"
+            }
+
+            // Overlay only: nothing between opens, and no input taken.
+            ScanReveal {
+                anchors.fill: parent
+                active: root.shown
+                z: 100
             }
 
             MouseArea {

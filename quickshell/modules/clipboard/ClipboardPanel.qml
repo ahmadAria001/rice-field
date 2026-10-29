@@ -1,3 +1,4 @@
+import "../../components"
 import "../../theme"
 import QtQuick
 import QtQuick.Controls
@@ -195,14 +196,37 @@ PanelWindow {
         width: 560
         height: 500
         anchors.centerIn: parent
-        color: Theme.base
+        // The shared card surface. This panel was missed when the rest of the
+        // shell moved off base/surface0, so it read as an unthemed rectangle
+        // sitting in the middle of a Lacia session.
+        color: Theme.bodyMid
         radius: Theme.radiusLg
-        border.color: Theme.surface0
+        border.color: Theme.rim
         border.width: Theme.borderWidth
+
+        HairBar {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.leftMargin: card.radius
+            anchors.rightMargin: card.radius
+            anchors.topMargin: 1
+            height: 2
+            radius: 0
+            opacity: 0.34
+            fadeTo: "end"
+        }
 
         // Absorb clicks so backdrop doesn't close when clicking inside card
         MouseArea {
             anchors.fill: parent
+        }
+
+        // Overlay only: nothing between opens, and no input taken.
+        ScanReveal {
+            anchors.fill: parent
+            active: root.visible
+            z: 100
         }
 
         ColumnLayout {

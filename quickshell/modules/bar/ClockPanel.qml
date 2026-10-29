@@ -134,6 +134,14 @@ PopupWindow {
         target: "clock"
     }
 
+    // The scan, over the card. Placed as a sibling rather than inside GlassCard,
+    // whose default property routes children into its ColumnLayout.
+    ScanReveal {
+        anchors.fill: parent
+        active: root.shown
+        z: 100
+    }
+
     GlassCard {
         id: card
 

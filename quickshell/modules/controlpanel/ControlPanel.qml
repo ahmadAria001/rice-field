@@ -199,10 +199,19 @@ PopupWindow {
             anchors.leftMargin: container.radius
             anchors.rightMargin: container.radius
             anchors.topMargin: 1
-            height: 1
+            height: 2
             radius: 0
-            opacity: 0.22
+            opacity: 0.34
             fadeTo: "end"
+        }
+
+        // The panel resolves on a scan rather than just fading up. Overlay only:
+        // it draws nothing between opens and takes no input, so the panel's hit
+        // area is unchanged.
+        ScanReveal {
+            anchors.fill: parent
+            active: controlPanel.shown
+            z: 100
         }
 
         ColumnLayout {
