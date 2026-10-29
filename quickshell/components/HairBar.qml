@@ -10,7 +10,7 @@ import QtQuick
 // under a section header, the bar's active workspace -- uses this instead of
 // hand-writing three GradientStops, which is how the three copies drift apart.
 //
-//   HairBar { width: 400; height: 3; radius: 1.5 }   (radius = Rectangle's)
+//   HairBar { width: 400; height: 3; radius: 1.5 }
 //   HairBar { width: 400; height: 1; opacity: 0.5; fadeTo: "end" }
 //
 // `fadeTo` is for rules that should dissolve rather than stop: "end" fades the
@@ -21,7 +21,8 @@ Rectangle {
 
     // "none" | "end"
     property string fadeTo: "none"
-    // 0..1: how much of the gradient to show, left to right. A slider's fill.
+    // 0..1: how much of the gradient to show, left to right. Drives the arrival
+    // sequences, where a rule draws itself in instead of fading.
     property real progress: 1.0
     // The highlight drifts rather than sitting at a fixed stop. Every hairline in
     // the shell reads Theme.hairPhase, so they move as one system instead of
@@ -32,64 +33,88 @@ Rectangle {
     antialiasing: true
     color: "transparent"
 
-    // The visible slice is `progress` of the full width. Clipping would cut the
-    // gradient's own geometry, so the rectangle is narrowed and the gradient is
-    // re-anchored to the full width instead: the colour at any x stays the same
-    // as it would be at full width.
-    readonly property real fullWidth: root.width
     readonly property real filledWidth: root.width * root.progress
 
-    // The drift is a sheen that slides along the bar, not an animated gradient
-    // stop: Qt does not repaint a Rectangle's gradient when a stop position
-    // changes (measured -- the stop moved, the pixels did not), whereas moving an
-    // item is an ordinary transform update. Cheaper, and it actually shows.
-    Rectangle {
-        id: sheen
+    // The reveal window. The gradient is drawn at full width inside this and the
+    // window clips it, so `progress` is a wipe rather than a resize: the colours
+    // stay where they belong while the line draws in. It used to only move the
+    // sheen and the middle stop, so a caller asking for 40% still painted the
+    // whole line -- documented as a left-to-right reveal and never clipping.
+    Item {
+        id: window
 
-        visible: root.living && root.progress > 0.02
-        // A comet, not a wash. At 35% of the bar's width the highlight was a
-        // 980px hump sliding across 2800px, which is a change in overall
-        // brightness rather than something you can watch move. Narrower and
-        // brighter reads as a light travelling the edge.
-        width: Math.max(48, Math.min(320, root.width * 0.16))
+        width: root.filledWidth
         height: root.height
-        y: 0
-        x: (root.filledWidth - width) * ((Math.sin(Theme.hairPhase * Math.PI * 2) + 1) / 2)
-        opacity: 0.9
-        antialiasing: true
+        clip: true
 
-        gradient: Gradient {
-            orientation: Gradient.Horizontal
-            GradientStop {
-                position: 0.0
-                color: "transparent"
+        Rectangle {
+            id: gradientRect
+
+            width: root.width
+            height: root.height
+            radius: root.radius
+            antialiasing: true
+
+            // The drift is a sheen that slides along the bar, not an animated
+            // gradient stop: Qt does not repaint a Rectangle's gradient when a
+            // stop position changes (measured -- the stop moved, the pixels did
+            // not), whereas moving an item is an ordinary transform update.
+            // Cheaper, and it actually shows.
+            Rectangle {
+                id: sheen
+
+                visible: root.living && root.progress > 0.02
+                // A comet, not a wash. At 35% of the bar's width the highlight was
+                // a 980px hump sliding across 2800px, which is a change in overall
+                // brightness rather than something you can watch move. Narrower
+                // and brighter reads as a light travelling the edge.
+                width: Math.max(48, Math.min(320, root.width * 0.16))
+                height: root.height
+                y: 0
+                x: (root.width - width) * ((Math.sin(Theme.hairPhase * Math.PI * 2) + 1) / 2)
+                opacity: 0.9
+                antialiasing: true
+
+                gradient: Gradient {
+                    orientation: Gradient.Horizontal
+                    GradientStop {
+                        position: 0.0
+                        color: "transparent"
+                    }
+
+                    GradientStop {
+                        position: 0.5
+                        color: Qt.rgba(1, 1, 1, 1.0)
+                    }
+
+                    GradientStop {
+                        position: 1.0
+                        color: "transparent"
+                    }
+                }
             }
-            GradientStop {
-                position: 0.5
-                color: Qt.rgba(1, 1, 1, 1.0)
-            }
-            GradientStop {
-                position: 1.0
-                color: "transparent"
+
+            gradient: Gradient {
+                orientation: Gradient.Horizontal
+                GradientStop {
+                    position: 0.00
+                    color: Theme.hairStops[0].c
+                }
+
+                GradientStop {
+                    position: Theme.hairStops[1].p
+                    color: Theme.hairStops[1].c
+                }
+
+                GradientStop {
+                    position: 1.00
+                    color: root.fadeTo === "end"
+                        ? Qt.rgba(Theme.hairStops[2].c.r, Theme.hairStops[2].c.g, Theme.hairStops[2].c.b, 0.0)
+                        : Theme.hairStops[2].c
+                }
             }
         }
+
     }
 
-    gradient: Gradient {
-        orientation: Gradient.Horizontal
-        GradientStop {
-            position: 0.00
-            color: Theme.hairStops[0].c
-        }
-        GradientStop {
-            position: Theme.hairStops[1].p * root.progress
-            color: Theme.hairStops[1].c
-        }
-        GradientStop {
-            position: 1.00
-            color: root.fadeTo === "end"
-                ? Qt.rgba(Theme.hairStops[2].c.r, Theme.hairStops[2].c.g, Theme.hairStops[2].c.b, 0.0)
-                : Theme.hairStops[2].c
-        }
-    }
 }
