@@ -47,11 +47,15 @@ Rectangle {
         id: sheen
 
         visible: root.living && root.progress > 0.02
-        width: Math.min(root.filledWidth, Math.max(24, root.width * 0.35))
+        // A comet, not a wash. At 35% of the bar's width the highlight was a
+        // 980px hump sliding across 2800px, which is a change in overall
+        // brightness rather than something you can watch move. Narrower and
+        // brighter reads as a light travelling the edge.
+        width: Math.max(48, Math.min(320, root.width * 0.16))
         height: root.height
         y: 0
         x: (root.filledWidth - width) * ((Math.sin(Theme.hairPhase * Math.PI * 2) + 1) / 2)
-        opacity: 0.85
+        opacity: 0.9
         antialiasing: true
 
         gradient: Gradient {
@@ -62,7 +66,7 @@ Rectangle {
             }
             GradientStop {
                 position: 0.5
-                color: Qt.rgba(1, 1, 1, 0.8)
+                color: Qt.rgba(1, 1, 1, 1.0)
             }
             GradientStop {
                 position: 1.0

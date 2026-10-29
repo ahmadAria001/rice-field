@@ -43,9 +43,9 @@ Rectangle {
         anchors.leftMargin: root.radius
         anchors.rightMargin: root.radius
         anchors.topMargin: 1
-        height: 1
+        height: 2
         radius: 0
-        opacity: 0.22
+        opacity: 0.34
         fadeTo: "end"
     }
 

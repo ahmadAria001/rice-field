@@ -1,3 +1,4 @@
+import "../../components"
 import "../../theme"
 import "../controlpanel"
 import QtQuick
@@ -46,6 +47,23 @@ PanelWindow {
         border.color: Theme.surface0
         border.width: Theme.borderWidth
         radius: Theme.radiusLg
+
+        // Her hairline along the top edge of the bar. This is the one hairline
+        // that is on screen the whole time: on a card the same line is 1px of
+        // light you have to go looking for, and the drift is invisible because
+        // the card is only open for a few seconds. On the bar it just runs.
+        HairBar {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.leftMargin: parent.radius
+            anchors.rightMargin: parent.radius
+            anchors.topMargin: 1
+            height: 2
+            radius: 0
+            opacity: 0.55
+            fadeTo: "end"
+        }
 
         RowLayout {
             anchors.fill: parent

@@ -136,13 +136,16 @@ QtObject {
     // ===== the hair, in motion =====
     // One shared clock for every HairBar, so the shell's hairline drifts as a single
     // system instead of each card running its own timer out of phase. 0..1 over about
-    // 18 seconds. Held at 0 when motion is scaled to nothing, which leaves the
+    // 10 seconds. Held at 0 when motion is scaled to nothing, which leaves the
     // gradient static rather than dead.
+    //
+    // It was 18 seconds, and 18 seconds of drift along a 1px line is slow enough
+    // that the eye files it as a static border. 10 is still a drift, not a chase.
     property real hairPhase: 0
     property Timer hairTimer: Timer {
         interval: 60
         running: themeRoot.motionScale > 0
         repeat: true
-        onTriggered: themeRoot.hairPhase = (themeRoot.hairPhase + 0.0034) % 1.0
+        onTriggered: themeRoot.hairPhase = (themeRoot.hairPhase + 0.0058) % 1.0
     }
 }
