@@ -23,6 +23,10 @@ Rectangle {
     property string fadeTo: "none"
     // 0..1: how much of the gradient to show, left to right. A slider's fill.
     property real progress: 1.0
+    // The highlight drifts rather than sitting at a fixed stop. Every hairline in
+    // the shell reads Theme.hairPhase, so they move as one system instead of
+    // drifting out of step the way a per-instance timer would.
+    property bool living: true
 
     // (radius is Rectangle's own; a caller sets it directly)
     antialiasing: true
@@ -33,6 +37,39 @@ Rectangle {
     // re-anchored to the full width instead: the colour at any x stays the same
     // as it would be at full width.
     readonly property real fullWidth: root.width
+    readonly property real filledWidth: root.width * root.progress
+
+    // The drift is a sheen that slides along the bar, not an animated gradient
+    // stop: Qt does not repaint a Rectangle's gradient when a stop position
+    // changes (measured -- the stop moved, the pixels did not), whereas moving an
+    // item is an ordinary transform update. Cheaper, and it actually shows.
+    Rectangle {
+        id: sheen
+
+        visible: root.living && root.progress > 0.02
+        width: Math.min(root.filledWidth, Math.max(24, root.width * 0.35))
+        height: root.height
+        y: 0
+        x: (root.filledWidth - width) * ((Math.sin(Theme.hairPhase * Math.PI * 2) + 1) / 2)
+        opacity: 0.85
+        antialiasing: true
+
+        gradient: Gradient {
+            orientation: Gradient.Horizontal
+            GradientStop {
+                position: 0.0
+                color: "transparent"
+            }
+            GradientStop {
+                position: 0.5
+                color: Qt.rgba(1, 1, 1, 0.8)
+            }
+            GradientStop {
+                position: 1.0
+                color: "transparent"
+            }
+        }
+    }
 
     gradient: Gradient {
         orientation: Gradient.Horizontal

@@ -132,4 +132,17 @@ QtObject {
     readonly property real slideDistancePanel: 16
     // Slide direction token for panels: "fromTop", "fromRight", "fromLeft", "fromBottom"
     readonly property string panelSlideDirection: "fromTop"
+
+    // ===== the hair, in motion =====
+    // One shared clock for every HairBar, so the shell's hairline drifts as a single
+    // system instead of each card running its own timer out of phase. 0..1 over about
+    // 18 seconds. Held at 0 when motion is scaled to nothing, which leaves the
+    // gradient static rather than dead.
+    property real hairPhase: 0
+    property Timer hairTimer: Timer {
+        interval: 60
+        running: themeRoot.motionScale > 0
+        repeat: true
+        onTriggered: themeRoot.hairPhase = (themeRoot.hairPhase + 0.0034) % 1.0
+    }
 }
