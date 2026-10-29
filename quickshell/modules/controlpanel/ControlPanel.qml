@@ -1,4 +1,5 @@
 import "../../theme"
+import "../../components"
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -185,11 +186,24 @@ PopupWindow {
             }
         }
 
-        color: Theme.mantle
-        border.color: Theme.surface0
+        color: Theme.bodyMid
+        border.color: Theme.rim
         border.width: Theme.borderWidth
         radius: Theme.radiusLg
         implicitHeight: headerRow.implicitHeight + viewViewport.implicitHeight + 42
+
+        HairBar {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.leftMargin: container.radius
+            anchors.rightMargin: container.radius
+            anchors.topMargin: 1
+            height: 1
+            radius: 0
+            opacity: 0.22
+            fadeTo: "end"
+        }
 
         ColumnLayout {
             id: mainLayout

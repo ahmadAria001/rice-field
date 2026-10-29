@@ -1,4 +1,5 @@
 import "../../theme"
+import "../../components"
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -14,9 +15,25 @@ Rectangle {
     Layout.fillWidth: true
     implicitHeight: cardLayout.implicitHeight + 20
     radius: Theme.radiusLg
-    color: Theme.base
-    border.color: (root.modelData && root.modelData.urgency === NotificationUrgency.Critical) ? Theme.red : Theme.surface0
+    // Same surface as GlassCard: bodyMid under a rim edge, with her gradient as the
+    // top rule. Not GlassCard itself because that component owns a ColumnLayout, and
+    // this card needs a full-bleed click target behind its content.
+    color: Theme.bodyMid
+    border.color: (root.modelData && root.modelData.urgency === NotificationUrgency.Critical) ? Theme.red : Theme.rim
     border.width: Theme.borderWidth
+
+    HairBar {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.leftMargin: root.radius
+        anchors.rightMargin: root.radius
+        anchors.topMargin: 1
+        height: 1
+        radius: 0
+        opacity: 0.22
+        fadeTo: "end"
+    }
 
     // Auto-dismiss Timer
     Timer {

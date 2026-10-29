@@ -1,4 +1,5 @@
 import "../../theme"
+import "../../components"
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -105,10 +106,24 @@ PanelWindow {
             id: card
 
             anchors.fill: parent
-            color: Theme.base
+            // The shared surface: bodyMid under a rim edge with her gradient on top.
+            color: Theme.bodyMid
             radius: Theme.radiusLg
-            border.color: Theme.surface0
+            border.color: Theme.rim
             border.width: Theme.borderWidth
+
+            HairBar {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.leftMargin: card.radius
+                anchors.rightMargin: card.radius
+                anchors.topMargin: 1
+                height: 1
+                radius: 0
+                opacity: 0.22
+                fadeTo: "end"
+            }
 
             MouseArea {
                 // prevent click events from propagating to the backdrop
