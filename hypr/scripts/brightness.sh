@@ -37,5 +37,11 @@ fi
 [ "$pct" -lt 0 ] && pct=0
 [ "$pct" -gt 100 ] && pct=100
 
-busctl call org.freedesktop.login1 /org/freedesktop/login1/session/auto \
-    org.freedesktop.login1.Session SetBrightness ssu backlight "$dev" $(( max * pct / 100 ))
+# Prefer brightnessctl when it is installed, so the keys and the control panel
+# drive the panel the same way; logind is the fallback that needs no extra tool.
+if command -v brightnessctl >/dev/null 2>&1; then
+    brightnessctl -q set "${pct}%"
+else
+    busctl call org.freedesktop.login1 /org/freedesktop/login1/session/auto \
+        org.freedesktop.login1.Session SetBrightness ssu backlight "$dev" $(( max * pct / 100 ))
+fi
