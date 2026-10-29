@@ -105,7 +105,7 @@ Rectangle {
 
                 Behavior on color {
                     ColorAnimation {
-                        duration: 150
+                        duration: Theme.animFast
                     }
 
                 }
@@ -173,14 +173,14 @@ Rectangle {
 
                     Behavior on color {
                         ColorAnimation {
-                            duration: 150
+                            duration: Theme.animFast
                         }
 
                     }
 
                     Behavior on border.color {
                         ColorAnimation {
-                            duration: 150
+                            duration: Theme.animFast
                         }
 
                     }
@@ -195,7 +195,7 @@ Rectangle {
 
     Behavior on border.color {
         ColorAnimation {
-            duration: 150
+            duration: Theme.animFast
         }
 
     }

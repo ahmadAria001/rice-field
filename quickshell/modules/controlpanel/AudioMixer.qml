@@ -117,7 +117,7 @@ ColumnLayout {
 
                         Behavior on color {
                             ColorAnimation {
-                                duration: 150
+                                duration: Theme.animFast
                             }
 
                         }

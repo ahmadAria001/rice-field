@@ -201,7 +201,7 @@ GridLayout {
 
         Behavior on color {
             ColorAnimation {
-                duration: 150
+                duration: Theme.animFast
             }
         }
     }
@@ -299,7 +299,7 @@ GridLayout {
 
         Behavior on color {
             ColorAnimation {
-                duration: 150
+                duration: Theme.animFast
             }
         }
     }
@@ -364,7 +364,7 @@ GridLayout {
 
         Behavior on color {
             ColorAnimation {
-                duration: 150
+                duration: Theme.animFast
             }
 
         }
@@ -427,7 +427,7 @@ GridLayout {
 
         Behavior on color {
             ColorAnimation {
-                duration: 150
+                duration: Theme.animFast
             }
 
         }
@@ -494,7 +494,7 @@ GridLayout {
 
         Behavior on color {
             ColorAnimation {
-                duration: 150
+                duration: Theme.animFast
             }
 
         }
@@ -565,7 +565,7 @@ GridLayout {
 
         Behavior on color {
             ColorAnimation {
-                duration: 150
+                duration: Theme.animFast
             }
 
         }
@@ -638,7 +638,7 @@ GridLayout {
 
         Behavior on color {
             ColorAnimation {
-                duration: 150
+                duration: Theme.animFast
             }
 
         }

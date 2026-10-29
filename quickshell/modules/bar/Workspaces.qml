@@ -44,22 +44,22 @@ RowLayout {
 
             Behavior on implicitWidth {
                 NumberAnimation {
-                    duration: 150
-                    easing.type: Easing.OutQuad
+                    duration: Theme.animFast
+                    easing.type: Theme.easeGeneral
                 }
 
             }
 
             Behavior on color {
                 ColorAnimation {
-                    duration: 150
+                    duration: Theme.animFast
                 }
 
             }
 
             Behavior on border.color {
                 ColorAnimation {
-                    duration: 150
+                    duration: Theme.animFast
                 }
 
             }

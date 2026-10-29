@@ -161,7 +161,7 @@ PopupWindow {
 
                     Behavior on color {
                         ColorAnimation {
-                            duration: 100
+                            duration: Theme.animFast
                         }
 
                     }
