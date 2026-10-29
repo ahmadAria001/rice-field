@@ -25,6 +25,25 @@ Item {
     property bool unlocking: false
     property bool ready: false
 
+    // Arrival: the lock assembles itself instead of appearing whole. One value
+    // drives every element, each with its own slice of it, so the order is stated
+    // once here rather than as six independent timers that can drift apart.
+    property real arrival: root.ready ? 1 : 0
+
+    // An element's slice of the arrival: 0 until `start`, then eased to 1 over
+    // `span`. Both are fractions of the whole sequence.
+    function arrive(start, span) {
+        return Math.max(0, Math.min(1, (root.arrival - start) / span));
+    }
+
+    Behavior on arrival {
+        NumberAnimation {
+            duration: Math.round(560 * Theme.motionScale)
+            easing.type: Theme.easeEntrance
+        }
+
+    }
+
     // Clearing the field after a failure must not drop keyboard focus.
     function onAuthFailed() {
         field.clear();
@@ -120,7 +139,9 @@ Item {
         // back. Opacity leads, the transform follows, which reads as a release rather
         // than a plain fade. Kept under the release timer in LockScreen so the
         // animation always finishes before the compositor drops the lock.
-        opacity: root.unlocking ? 0 : (root.ready ? 1 : 0)
+        // The unlock fade only. Arrival is per element now (see root.arrive), so a
+        // stage-level fade-in would multiply with it and wash the sequence out.
+        opacity: root.unlocking ? 0 : 1
         scale: root.unlocking ? 1.06 : 1
         y: root.unlocking ? -16 : 0
         // A soft defocus while unlocking, so the fade feels like dissolving into the
@@ -138,12 +159,20 @@ Item {
                 size: 104
                 source: root.avatarSource
                 name: root.userName
+                opacity: root.arrive(0.00, 0.45)
+                transform: Translate {
+                    y: (1 - root.arrive(0.00, 0.45)) * 10
+                }
             }
 
             ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.topMargin: 6
                 spacing: 2
+                opacity: root.arrive(0.10, 0.45)
+                transform: Translate {
+                    y: (1 - root.arrive(0.10, 0.45)) * 8
+                }
 
                 Text {
                     Layout.alignment: Qt.AlignHCenter
@@ -184,6 +213,10 @@ Item {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.topMargin: 10
                 spacing: 0
+                opacity: root.arrive(0.18, 0.50)
+                transform: Translate {
+                    y: (1 - root.arrive(0.18, 0.50)) * 8
+                }
 
                 Text {
                     id: clock
@@ -237,6 +270,8 @@ Item {
                     height: 2
                     radius: 0
                     opacity: 0.6
+                    // Draws itself left to right once the clock has landed.
+                    progress: root.arrive(0.34, 0.40)
                 }
 
             }
@@ -362,7 +397,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 34
-        opacity: root.unlocking ? 0 : (root.ready ? 1 : 0)
+        opacity: root.unlocking ? 0 : root.arrive(0.55, 0.45)
 
         Behavior on opacity {
             NumberAnimation {

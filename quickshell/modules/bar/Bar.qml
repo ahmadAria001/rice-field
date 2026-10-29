@@ -39,6 +39,25 @@ PanelWindow {
     color: "transparent"
     WlrLayershell.layer: WlrLayer.Top
 
+    // Arrival: the bar settles in when the shell starts, left to right, and the
+    // hairline draws itself across rather than appearing whole. One value drives
+    // every group, each with its own slice of it, so the order is stated once here
+    // instead of as three timers that can drift apart.
+    property real revealT: 0
+
+    // A group's slice of the arrival: 0 until `start`, then eased to 1 over `span`.
+    function slice(start, span) {
+        return Math.max(0, Math.min(1, (revealT - start) / span));
+    }
+
+    NumberAnimation on revealT {
+        from: 0
+        to: 1
+        duration: Math.round(620 * Theme.motionScale)
+        easing.type: Theme.easeEntrance
+        running: true
+    }
+
     Rectangle {
         id: container
 
@@ -63,6 +82,7 @@ PanelWindow {
             radius: 0
             opacity: 0.55
             fadeTo: "end"
+            progress: barRoot.revealT
         }
 
         RowLayout {
@@ -73,8 +93,14 @@ PanelWindow {
 
             // Left: LauncherButton + Workspaces
             RowLayout {
+                id: leftGroup
+
                 spacing: 8
                 Layout.alignment: Qt.AlignVCenter
+                opacity: barRoot.slice(0.00, 0.60)
+                transform: Translate {
+                    y: (1 - leftGroup.opacity) * 5
+                }
 
                 LauncherButton {
                 }
@@ -89,12 +115,24 @@ PanelWindow {
 
             // Center: Clock
             Clock {
+                id: centerGroup
+
+                opacity: barRoot.slice(0.12, 0.60)
+                transform: Translate {
+                    y: (1 - centerGroup.opacity) * 5
+                }
             }
 
             // Right Module
             RowLayout {
+                id: rightGroup
+
                 spacing: 8
                 Layout.alignment: Qt.AlignVCenter
+                opacity: barRoot.slice(0.24, 0.60)
+                transform: Translate {
+                    y: (1 - rightGroup.opacity) * 5
+                }
 
                 CpuTempPill {
                 }
