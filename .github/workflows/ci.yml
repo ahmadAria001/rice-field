@@ -1,0 +1,25 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  qml:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      # qt6-declarative-dev-tools ships qmlformat, which check-qml.sh uses for the
+      # parse check. It lands in /usr/lib/qt6/bin, which is not on PATH, so the
+      # script looks there itself. python3 runs the structural checks.
+      - name: Install tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends qt6-declarative-dev-tools python3
+
+      - name: Check
+        run: ./quickshell/scripts/check-qml.sh
