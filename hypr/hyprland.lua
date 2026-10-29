@@ -115,6 +115,17 @@ hl.env("QT_STYLE_OVERRIDE", "Breeze")
 -----------------------
 
 -- Refer to https://wiki.hypr.land/configuring/core/config-options/
+-- Window borders follow the wallpaper: quickshell/scripts/palette.sh writes
+-- palette.lua next to this file. The fallback keeps the config valid before that
+-- script has ever run.
+local ok, palette = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/palette.lua")
+if not ok or type(palette) ~= "table" then
+    palette = {
+        active_border   = { colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
+        inactive_border = "rgba(595959aa)",
+    }
+end
+
 hl.config({
     general = {
         gaps_in  = 5,
@@ -123,8 +134,8 @@ hl.config({
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
-            inactive_border = "rgba(595959aa)",
+            active_border   = palette.active_border,
+            inactive_border = palette.inactive_border,
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
