@@ -244,35 +244,24 @@ PanelWindow {
                 spacing: 8
                 opacity: root.motionOn ? 1 : 0.4
 
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    Text {
-                        text: "Speed"
-                        color: Theme.ink
-                        font.pixelSize: Theme.fontMd
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    Text {
-                        text: root.motionOn ? root.speed.toFixed(2) + "x" : "off"
-                        color: Theme.inkFaint
-                        font.family: "monospace"
-                        font.pixelSize: Theme.fontSm
-                    }
-
+                Text {
+                    text: "Speed"
+                    color: Theme.ink
+                    font.pixelSize: Theme.fontMd
                 }
 
-                SpeedSlider {
+                // The same slider the control panel uses for volume and
+                // brightness, so a slider looks like a slider everywhere.
+                RiceSlider {
                     Layout.fillWidth: true
                     enabled: root.motionOn
-                    value: root.speed
                     from: root.speedMin
                     to: root.speedMax
-                    onMoved: (v) => root.apply(v)
+                    // An empty track when motion is off, so the control reads as
+                    // off rather than as a speed that is being ignored.
+                    value: root.motionOn ? root.speed : root.speedMin
+                    valueText: root.motionOn ? root.speed.toFixed(2) + "x" : "off"
+                    onMoved: root.apply(value)
                 }
 
             }
@@ -325,67 +314,6 @@ PanelWindow {
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
             onClicked: sw.toggled()
-        }
-
-    }
-
-    // A slider whose filled track is the hairline itself -- which is what
-    // HairBar's own header says it is for, and the reason `progress` had to
-    // become a real clip rather than a shifted gradient.
-    component SpeedSlider: Item {
-        id: sl
-
-        property real value: 1
-        property real from: 0.5
-        property real to: 1.5
-        signal moved(real v)
-
-        implicitHeight: 22
-
-        function valueAt(px) {
-            return sl.from + Math.max(0, Math.min(1, px / sl.width)) * (sl.to - sl.from);
-        }
-
-        Rectangle {
-            anchors.verticalCenter: parent.verticalCenter
-            width: parent.width
-            height: 6
-            radius: 3
-            color: Theme.bodyLow
-            border.color: Theme.rim
-            border.width: Theme.borderWidth
-        }
-
-        HairBar {
-            anchors.verticalCenter: parent.verticalCenter
-            width: parent.width
-            height: 6
-            radius: 3
-            opacity: sl.enabled ? 0.9 : 0.4
-            progress: (sl.value - sl.from) / (sl.to - sl.from)
-        }
-
-        Rectangle {
-            width: 14
-            height: 14
-            radius: 7
-            anchors.verticalCenter: parent.verticalCenter
-            x: Math.max(0, Math.min(sl.width - width, (sl.value - sl.from) / (sl.to - sl.from) * sl.width - width / 2))
-            color: sl.enabled ? Theme.accent : Theme.inkFaint
-            border.color: Theme.bodyMid
-            border.width: 2
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            enabled: sl.enabled
-            onPressed: (mouse) => sl.moved(sl.valueAt(mouse.x))
-            onPositionChanged: (mouse) => {
-                if (pressed)
-                    sl.moved(sl.valueAt(mouse.x));
-
-            }
         }
 
     }
