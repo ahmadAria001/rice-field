@@ -634,9 +634,6 @@ PanelWindow {
                                 color: delMouse.containsMouse ? Theme.bodyTop : "transparent"
                                 border.color: delMouse.containsMouse ? Theme.danger : "transparent"
                                 border.width: Theme.borderWidth
-                                ToolTip.visible: delMouse.containsMouse
-                                ToolTip.text: "Delete clip"
-                                ToolTip.delay: 300
 
                                 Text {
                                     anchors.centerIn: parent
@@ -660,17 +657,22 @@ PanelWindow {
                                     }
                                 }
 
+                                TooltipCard {
+                                    anchorItem: delMouse
+                                    shown: delMouse.containsMouse
+                                    text: "Delete clip"
+                                }
+
                             }
 
                             // Select / Ready to Paste indicator
                             Rectangle {
+                                id: selectHint
+
                                 implicitWidth: 28
                                 implicitHeight: 28
                                 radius: Theme.radiusSm
                                 color: itemMouse.containsMouse ? Theme.accent : "transparent"
-                                ToolTip.visible: itemMouse.containsMouse && !delMouse.containsMouse
-                                ToolTip.text: "Click to select & copy for paste"
-                                ToolTip.delay: 300
 
                                 Text {
                                     anchors.centerIn: parent
@@ -678,6 +680,12 @@ PanelWindow {
                                     font.family: "MesloLGS Nerd Font, FantasqueSansM Nerd Font, sans-serif"
                                     font.pixelSize: Theme.fontMd
                                     color: itemMouse.containsMouse ? Theme.bodyLow : Theme.inkFaint
+                                }
+
+                                TooltipCard {
+                                    anchorItem: selectHint
+                                    shown: itemMouse.containsMouse && !delMouse.containsMouse
+                                    text: "Click to select & copy for paste"
                                 }
 
                             }

@@ -1,3 +1,4 @@
+import "../../components"
 import "../../theme"
 import QtQuick
 import QtQuick.Controls
@@ -120,59 +121,19 @@ ColumnLayout {
         }
 
         // Volume Slider
-        Slider {
+        RiceSlider {
             id: volSlider
 
             from: 0
             to: 100
             value: root.volumeLevel
             Layout.fillWidth: true
+            fillColor: root.isMuted ? Theme.bodyTop : Theme.accent
             onMoved: {
                 var val = Math.round(value);
                 root.volumeLevel = val;
                 execProc.exec(["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", val + "%"]);
             }
-
-            background: Rectangle {
-                x: volSlider.leftPadding
-                y: volSlider.topPadding + volSlider.availableHeight / 2 - height / 2
-                implicitWidth: 200
-                implicitHeight: 28
-                width: volSlider.availableWidth
-                height: implicitHeight
-                radius: Theme.radiusSm
-                color: Theme.bodyMid
-
-                Rectangle {
-                    width: volSlider.visualPosition * parent.width
-                    height: parent.height
-                    color: root.isMuted ? Theme.bodyTop : Theme.accent
-                    radius: Theme.radiusSm
-                }
-
-                Text {
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: Math.round(volSlider.value) + "%"
-                    font.family: "sans-serif"
-                    font.pixelSize: Theme.fontSm
-                    font.bold: true
-                    color: Theme.ink
-                }
-
-            }
-
-            handle: Rectangle {
-                x: volSlider.leftPadding + volSlider.visualPosition * (volSlider.availableWidth - width)
-                y: volSlider.topPadding + volSlider.availableHeight / 2 - height / 2
-                implicitWidth: 12
-                implicitHeight: 28
-                radius: 4
-                color: Theme.ink
-                visible: volSlider.pressed
-            }
-
         }
 
         // Drill-down button for Audio Mixer
@@ -197,9 +158,14 @@ ColumnLayout {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: root.openAudioMixer()
-                ToolTip.visible: audioDrillMouse.containsMouse
-                ToolTip.text: "Audio & Mixer Settings"
-                ToolTip.delay: 300
+            }
+
+            // The card every other surface uses, pinned below the button instead
+            // of the default tooltip that followed the cursor and ate the click.
+            TooltipCard {
+                anchorItem: audioDrillMouse
+                shown: audioDrillMouse.containsMouse
+                text: "Audio & Mixer Settings"
             }
 
         }
@@ -229,7 +195,7 @@ ColumnLayout {
         }
 
         // Brightness Slider
-        Slider {
+        RiceSlider {
             id: brightSlider
 
             from: 5
@@ -241,47 +207,6 @@ ColumnLayout {
                 root.brightnessLevel = val;
                 execProc.exec(["sh", "-c", "command -v brightnessctl >/dev/null && brightnessctl -q set " + val + "% || busctl call org.freedesktop.login1 /org/freedesktop/login1/session/auto org.freedesktop.login1.Session SetBrightness ssu backlight \"$(basename $(ls -d /sys/class/backlight/* 2>/dev/null | head -n1))\" $(( " + val + " * $(cat /sys/class/backlight/*/max_brightness 2>/dev/null | head -n1) / 100 ))"]);
             }
-
-            background: Rectangle {
-                x: brightSlider.leftPadding
-                y: brightSlider.topPadding + brightSlider.availableHeight / 2 - height / 2
-                implicitWidth: 200
-                implicitHeight: 28
-                width: brightSlider.availableWidth
-                height: implicitHeight
-                radius: Theme.radiusSm
-                color: Theme.bodyMid
-
-                Rectangle {
-                    width: brightSlider.visualPosition * parent.width
-                    height: parent.height
-                    color: Theme.accent
-                    radius: Theme.radiusSm
-                }
-
-                Text {
-                    anchors.right: parent.right
-                    anchors.rightMargin: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: Math.round(brightSlider.value) + "%"
-                    font.family: "sans-serif"
-                    font.pixelSize: Theme.fontSm
-                    font.bold: true
-                    color: Theme.ink
-                }
-
-            }
-
-            handle: Rectangle {
-                x: brightSlider.leftPadding + brightSlider.visualPosition * (brightSlider.availableWidth - width)
-                y: brightSlider.topPadding + brightSlider.availableHeight / 2 - height / 2
-                implicitWidth: 12
-                implicitHeight: 28
-                radius: 4
-                color: Theme.ink
-                visible: brightSlider.pressed
-            }
-
         }
 
         // Drill-down button for Multi-Monitor Brightness
@@ -306,9 +231,12 @@ ColumnLayout {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: root.openBrightness()
-                ToolTip.visible: brightDrillMouse.containsMouse
-                ToolTip.text: "Display Brightness Settings"
-                ToolTip.delay: 300
+            }
+
+            TooltipCard {
+                anchorItem: brightDrillMouse
+                shown: brightDrillMouse.containsMouse
+                text: "Display Brightness Settings"
             }
 
         }

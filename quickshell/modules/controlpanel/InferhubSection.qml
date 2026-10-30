@@ -1,3 +1,4 @@
+import "../../components"
 import "../../theme"
 import QtQuick
 import QtQuick.Controls
@@ -171,9 +172,6 @@ Rectangle {
             color: refreshMouse.containsMouse ? Theme.bodyTop : "transparent"
             border.color: refreshMouse.containsMouse ? Theme.bodyTop : "transparent"
             border.width: Theme.borderWidth
-            ToolTip.visible: refreshMouse.containsMouse
-            ToolTip.text: "Refresh InferHub balance"
-            ToolTip.delay: 300
 
             Text {
                 anchors.centerIn: parent
@@ -193,6 +191,12 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: root.forceRefresh()
+            }
+
+            TooltipCard {
+                anchorItem: refreshMouse
+                shown: refreshMouse.containsMouse
+                text: "Refresh InferHub balance"
             }
         }
     }
